@@ -24,9 +24,17 @@
 			}
 			// 扫码成功返回
 			function onmarked(type, result, file) {
-				plus.storage.setItem("scanCodeResult", result);
-				cancelScan();
-				location.assign("coderesult.html");
+				var isScanBatch = plus.storage.getItem("isScanBatch");
+				if (isScanBatch == "true") {
+					scan.cancel();
+					plus.storage.setItem("scanCodeResult", result);
+					alert("扫码成功！");
+					scan.start();
+				} else {
+					plus.storage.setItem("scanCodeResult", result);
+					cancelScan();
+					location.assign("coderesult.html");
+				}
 			}
 			// 打开闪光灯
 			function setFlash() {

@@ -4,14 +4,29 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<title>移动工票</title>
-		<script type="text/javascript">
-			// plusready 比 domcontentready 晚
-			document.addEventListener('plusready', function() {
-				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
-			});
-		</script>
 		<link rel="stylesheet" href="../css/common.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../css/button.min.css" />
+		<script type="text/javascript">
+			var isOrnot;
+			document.addEventListener('plusready', function() {
+				isOrnot = plus.storage.getItem("isScanBatch");
+				if (isOrnot == "true") {
+					document.getElementById("isScanBatch").checked = true;
+				} else {
+					document.getElementById("isScanBatch").checked = false;
+				}
+			});
+			function isScanBatch() {
+				isOrnot = document.getElementById("isScanBatch").checked;
+				if (isOrnot) {
+					plus.storage.setItem("isScanBatch", "true");
+				} else {
+					plus.storage.setItem("isScanBatch", "false");
+				}
+				
+			}
+		</script>
 	</head>
 	<body style="background-color: #f5f5f5;">
 		<header>
@@ -20,19 +35,27 @@
 		<div class="contain-wrapper setting">
 			<ul class="settingList">
 				<li class="item">
-					<a href="barcodes.html">
+					<div class="txt">
 						批量扫码
-					</a>
+					</div>
+					<div class="input-wrapper">
+						<label class="el-switch el-switch-sm" onclick="isScanBatch()">
+							<input type="checkbox" name="switch" id="isScanBatch">
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
 				</li>
 				<li class="item">
-					工序设定
+					<div class="txt">
+						工序设定
+					</div>
 				</li>
 			</ul>
 		</div>
 		<div class="navbar">
 			<ul>
 				<li>
-					<a href="../index.html">
+					<a href="index.html">
 						<div class="icon-home3"></div>
 						首页
 					</a>

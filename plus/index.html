@@ -6,14 +6,19 @@
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<title>移动工票</title>
 		<script type="text/javascript">
+			// 禁止选择
+			document.oncontextmenu=function(){
+				return false;
+			};
 			// plusready 比 domcontentready 晚
 			document.addEventListener('plusready', function() {
 				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
 				plus.navigator.setStatusBarBackground('#444');
+				
 			});
 		</script>
-		<link rel="stylesheet" href="css/common.css" />
-		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="../css/common.css" />
+		<link rel="stylesheet" href="../css/style.css" />
 	</head>
 
 	<body style="background-color: #f5f5f5;">
@@ -23,16 +28,16 @@
 		<div class="contain-wrapper index">
 			<div class="personalMsg">
 				<div class="avatar">
-					<img src="img/tab-profile-active.png" />
+					<img src="../img/tab-profile-active.png" />
 				</div>
 				<div class="txt">
 					<div class="name">郑玉珍</div>
 					<div class="id">00004</div>
 				</div>
 			</div>
-			<a class="qrcode" href="plus/barcode.html">
+			<a class="qrcode" href="barcode.html">
 				<div class="icon">
-					<img src="img/be76ab4278df7c048266e4279cc3136c.png" />
+					<img src="../img/be76ab4278df7c048266e4279cc3136c.png" />
 				</div>
 				<div class="txt">
 					扫码计件
@@ -41,7 +46,7 @@
 			<div class="workTables">
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
-						<img src="img/timg.jpg" />
+						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
 						今日产量明细
@@ -49,7 +54,7 @@
 				</a>
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
-						<img src="img/timg.jpg" />
+						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
 						今日产量明细
@@ -58,7 +63,7 @@
 				<div class="horizontal-line"></div>
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
-						<img src="img/timg.jpg" />
+						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
 						今日产量明细
@@ -66,7 +71,7 @@
 				</a>
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
-						<img src="img/timg.jpg" />
+						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
 						今日产量明细
@@ -76,7 +81,7 @@
 			<div class="others">
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
-						<img src="img/timg.jpg" />
+						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
 						今日产量明细
@@ -84,7 +89,7 @@
 				</a>
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
-						<img src="img/timg.jpg" />
+						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
 						今日产量明细
@@ -103,7 +108,7 @@
 					说明
 				</li>
 				<li>
-					<a href="plus/setting.html">
+					<a href="setting.html">
 						<div class="icon-cog"></div>
 						设置
 					</a>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>登陆</title>
+		<link rel="stylesheet" href="css/common.css" />
+		<script type="text/javascript">
+			// 检测是否存在用户登录缓存
+			if (localStorage.getItem("user")) {
+				location.assign("plus/index.html");
+			}
+			
+			// plusready 比 domcontentready 晚
+			document.addEventListener('plusready', function() {
+				plus.navigator.setStatusBarBackground('#444');
+			});
+			
+			// 登录事件
+			function signin() {
+				var 
+					userName = document.getElementById("username").value,
+					userpw = document.getElementById("userpw").value;
+				localStorage.setItem("user", userName);
+				location.assign("plus/index.html");
+			}
+			
+		</script>
+	</head>
+
+	<body>
+		<header>
+			<div class="title">扫码APP</div>
+		</header>
+		<div class="contain-wrapper signin">
+			<div class="input-item">
+				<div class="txt">
+					账号：
+				</div>
+				<div class="item-input">
+					<input type="text" name="username" id="username"/>
+				</div>
+			</div>
+			<div class="input-item">
+				<div class="txt">
+					密码：
+				</div>
+				<div class="item-input">
+					<input type="password" name="userpw" id="userpw"/>
+				</div>
+			</div>
+			<div class="signin-submit">
+				<button onclick="signin()">登 陆</button>
+			</div>
+		</div>
+	</body>
+
+</html>
