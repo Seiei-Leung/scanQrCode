@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>移动工票</title>
+		<script type="text/javascript">
+			// plusready 比 domcontentready 晚
+			document.addEventListener('plusready', function() {
+				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			});
+		</script>
+		<link rel="stylesheet" href="../css/common.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+	</head>
+	<body style="background-color: #f5f5f5;">
+		<header>
+			<div class="title">设置</div>
+		</header>
+		<div class="contain-wrapper setting">
+			<ul class="settingList">
+				<li class="item">
+					<a href="barcodes.html">
+						批量扫码
+					</a>
+				</li>
+				<li class="item">
+					工序设定
+				</li>
+			</ul>
+		</div>
+		<div class="navbar">
+			<ul>
+				<li>
+					<a href="../index.html">
+						<div class="icon-home3"></div>
+						首页
+					</a>
+				</li>
+				<li>
+					<div class="icon-table2"></div>
+					说明
+				</li>
+				<li class="active">
+					<div class="icon-cog"></div>
+					设置
+				</li>
+				<li>
+					<div class="icon-user"></div>
+					系统
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>

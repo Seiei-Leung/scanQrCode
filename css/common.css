@@ -3,6 +3,16 @@
 	padding: 0;
 	color: #444;
 }
+a {
+	text-decoration: none;
+}
+li {
+	list-style-type: none;
+}
+button {
+	border: none;
+	outline: none;
+}
 header {
 	width: 100%;
 	height: 44px;
@@ -14,6 +24,16 @@ header {
 	line-height: 44px;
 	background-color: #444;
 }
+header .goback {
+	position: absolute;
+	width: 44px;
+	height: 44px;
+}
+header .goback i {
+	font-size: 24px;
+	line-height: 44px;
+	color: #fff;
+}
 header .title {
 	color: #fff;
 }
@@ -24,6 +44,11 @@ header .title {
 	height: 1px;
 	width: 100%;
 	background-color: #DDDDDD
+}
+.footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
 }
 /* 首页 */
 .index .personalMsg {
@@ -53,6 +78,7 @@ header .title {
 	font-weight: bold;
 }
 .index .qrcode {
+	display: block;
 	padding: 5px 0;
 	background-color: #f5f5f5;
 }
@@ -111,4 +137,148 @@ header .title {
 	line-height: 40px;
 	vertical-align: top;
 	font-size: 14px;
+}
+.navbar ul{
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 8px 0;
+	font-size: 0;
+	background-color: #E9E9E9;
+	border-top: 1px solid #DDDDDD;
+}
+.navbar ul li div {
+	margin-bottom: 5px;
+	font-size: 20px;
+}
+.navbar li {
+	display: inline-block;
+	width: 25%;
+	font-size: 18px;
+	text-align: center;
+}
+.navbar a {
+	display: block;
+}
+.navbar .active {
+	color: #449FDB;
+}.navbar .active div {
+	color: #449FDB;
+}
+
+/* 登陆页面 */
+.signin {
+	margin-top: 60px;
+}
+.signin .input-item {
+	width: 90%;
+	margin: auto;
+	margin-top: 15px;
+	font-size: 0;
+}
+.signin .input-item .txt {
+	display: inline-block;
+	width: 30%;
+	line-height: 24px;
+	text-align: center;
+	vertical-align: top;
+	font-size: 24px;
+}
+.signin .input-item .item-input {
+	display: inline-block;
+	width: 70%;
+	vertical-align: top;
+}
+.signin .input-item .item-input input {
+	box-sizing: border-box;
+	height: 24px;
+	width: 90%;
+	padding-left: 1em;
+	line-height: 24px;
+	vertical-align: top;
+	outline: none;
+	border: none;
+	border-bottom: 1px solid #DDDDDD;
+}
+.signin .signin-submit button{
+	display: block;
+	width: 80%;
+	margin: auto;
+	margin-top: 15px;
+	line-height: 1.5em;
+	color: #fff;
+	background-color: #4E9FEF;
+	font-size: 25px;
+	border-radius: 4px;
+}
+
+/* 扫码 */
+#bcid {
+	width: 100%;
+	position: absolute;
+	top: 44px;
+	bottom: 44px;
+	text-align: center;
+}
+#bcid .txt{
+	margin-top: 40%;
+	color: #fff;
+}
+.barcode-footer {
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
+	background-color: #f5f5f5;
+}
+.barcode-footer div{
+	font-size: 20px;
+	line-height: 2em;
+	color: #444;
+}
+
+/* 扫码成功结果 */
+.codeResult .personalMsg {
+	padding: 4px 10px;
+	background-color: #fff;
+	border-bottom: 1px solid #DDDDDD;
+}
+.codeResult .personalMsg .txt,
+.codeResult .personalMsg .title {
+	display: inline-block;
+	line-height: 1.5em;
+}
+.codeResult .resultList {
+	padding: 10px;
+	line-height: 2em;
+}
+.codeResult .submit button {
+	display: block;
+	width: 80%;
+	margin: auto;
+	margin-top: 15px;
+	line-height: 1.5em;
+	color: #fff;
+	background-color: #4E9FEF;
+	font-size: 25px;
+	border-radius: 4px;
+}
+
+/* 设置页面 */
+.setting .settingList {
+	margin-top: 100px;
+	background-color: #fff;
+	border-top: 1px solid #ddd;
+}
+.setting .settingList .item {
+	padding: 0 10px;
+	font-size: 18px;
+	line-height: 2em;
+	border-bottom: 1px solid #ddd;
+}
+.setting .settingList .item a{
+	display: block;
 }
