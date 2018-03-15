@@ -5,9 +5,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<meta name="misapplication-tap-highlight" content="no"/>
-		<meta name="HandheldFriendly" content="true"/>
-		<meta name="MobileOptimized" content="320"/>
+		<meta name="misapplication-tap-highlight" content="no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
 		<title>登陆</title>
 		<link rel="stylesheet" href="css/common.css" />
 		<script type="text/javascript">
@@ -16,45 +16,45 @@
 				return false;
 			};
 			// 检测是否存在用户登录缓存
-			if (localStorage.getItem("user")) {
+			if(localStorage.getItem("user")) {
 				location.assign("plus/index.html");
 			}
-			var ws=null,domready=false;
+			var domready = false;
 			// plusready 比 domcontentready 晚
 			function plusReady() {
-			if (ws||!window.plus||!domready) {
-				return;
-			}
-				plus.navigator.setStatusBarBackground('#444');
+				if(!window.plus || !domready) {
+					return;
+				}
+				plus.navigator.setStatusBarBackground('#444444');
 			};
-			if(window.plus){
+			if(window.plus) {
 				plusReady();
-			}else{
+			} else {
 				document.addEventListener('plusready', plusReady, false);
 			}
 			// 监听DOMContentLoaded事件
-			document.addEventListener('DOMContentLoaded', function(){
-				domready=true;
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
 				plusReady();
 			}, false);
-			
+
 			// 登录事件
 			function signin() {
-				var 
+				var
 					userName = document.getElementById("username").value.replace(/\s*/g, ''),
 					userpw = document.getElementById("userpw").value.replace(/\s*/g, ''),
 					geturl = "http://192.168.1.213:38080/estapi/api/User/GetLogin?username=" + userName + "&password=" + userpw;
-					// geturl = "http://192.168.1.213:38080/estapi/api/User/GetLogin?username=ZC-DN-LZC&password=123456";
-				if ((!userName) || (!userpw)) {
-					plus.nativeUI.alert("请输入账号及密码", function(){}, "信息框", "确定");
+				// geturl = "http://192.168.1.213:38080/estapi/api/User/GetLogin?username=ZC-DN-LZC&password=123456";
+				if((!userName) || (!userpw)) {
+					plus.nativeUI.alert("请输入账号及密码", function() {}, "信息框", "确定");
 					return;
 				}
 				var xhr = new plus.net.XMLHttpRequest();
 				xhr.onreadystatechange = function() {
-					if (xhr.readyState == 4) {
-						if (xhr.status == 200) {
+					if(xhr.readyState == 4) {
+						if(xhr.status == 200) {
 							var response = JSON.parse(xhr.responseText);
-							if (response.length > 0) {
+							if(response.length > 0) {
 								console.log(response);
 								console.log("responseText: " + xhr.responseText);
 								localStorage.setItem("user", xhr.responseText);
@@ -62,16 +62,15 @@
 							}
 						} else {
 							console.log("responseText: " + xhr.responseText);
-							plus.nativeUI.alert("请检查密码及用户名是否正确", function(){}, "登陆失败", "确定");
+							plus.nativeUI.alert("请检查密码及用户名是否正确", function() {}, "登陆失败", "确定");
 						}
 					}
-					
-				} 
+
+				}
 				// username: this.userName,password: this.userPW
 				xhr.open("GET", geturl);
 				xhr.send();
 			}
-			
 		</script>
 	</head>
 
@@ -85,7 +84,7 @@
 					账号：
 				</div>
 				<div class="item-input">
-					<input type="text" name="username" id="username"/>
+					<input type="text" name="username" id="username" />
 				</div>
 			</div>
 			<div class="input-item">
@@ -93,7 +92,7 @@
 					密码：
 				</div>
 				<div class="item-input">
-					<input type="password" name="userpw" id="userpw"/>
+					<input type="password" name="userpw" id="userpw" />
 				</div>
 			</div>
 			<div class="signin-submit">

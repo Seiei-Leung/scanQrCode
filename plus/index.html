@@ -4,9 +4,9 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<meta name="misapplication-tap-highlight" content="no"/>
-		<meta name="HandheldFriendly" content="true"/>
-		<meta name="MobileOptimized" content="320"/>
+		<meta name="misapplication-tap-highlight" content="no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
 		<title>移动工票</title>
 		<script type="text/javascript" src="../js/common.js"></script>
 		<script type="text/javascript">
@@ -14,13 +14,20 @@
 			document.oncontextmenu = function() {
 				return false;
 			};
+
+			// 初始化Plus
 			var
 				user,
+				domready = false,
 				isOrnot,
 				processNum;
-			// plusready 比 domcontentready 晚
+			// 在 ios 中，plus 的初始化比 DOM树的初始化之前，而在安卓， plus 的初始化在 DOM树的初始化之后
 			function plusReady() {
-				// 设置手机顶部栏颜色
+				// 起筛选作用，要DOM树初始化好和 plus 初始化好才执行
+				if(!window.plus || !domready) {
+					return;
+				}
+				// 设置手机顶部栏颜色,这只适合 ios，要设置安卓，就要在manifest.json中设置 statusbar
 				plus.navigator.setStatusBarBackground('#444');
 				// 初始化用户
 				// [{"Id":"873784e4-d773-4f1d-89a9-0f30ca52ea52","TypeCode":"1002","Code":"ZC-DN-LZC","EmployeeNo":null,"EmployeeName":null,"Name":"电脑-梁智承","PW":"123456","MnemonicCode":null,"QueryMons":12,"QueryScope":12,"Grade":5,"IsAdmin":false,"Del":false,"BUser":"debug","BTime":"2017-11-21T11:30:51","EUser":"debug","ETime":"2017-11-21T11:31:48","State":0,"LastOnline":"2017-11-21T00:00:00","LoginIP":"0.0.0.0","LoginOS":0,"LoginPort":"2001","HeadPicIdx":0,"SMTP":"xx","EmailName":"xx","EmailPwd":"xx","Sex":0,"Vcard":null,"isBroadcast":null,"isEditUserData":null,"isSendNotice":null,"isSendSMS":null,"CreateRooms":null,"orderID":null,"DeptCode":null,"PhotoData":null,"birthday":null,"job":null,"officeTelephone":null,"Hometown":null,"adress":null,"Education":null,"Post":null,"school":null,"MobilePhone":null,"Memo":null,"PW_Back":null,"PW_Back2":null,"UnCheckUser":false,"LoginInfo":null,"Power":null,"On_IM_Off":false,"HideNotice":false,"PW2":null,"On_IM_OffTT":false,"WarnNotice":false,"ProSupplier":null,"MatSupplier":null,"CanNotLogin":false}]
@@ -37,25 +44,17 @@
 				processNum = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
 				document.getElementById("processNum").innerText = processNum;
 			};
-			var ws=null,domready=false;
-			// plusready 比 domcontentready 晚
-			function plusReady() {
-				if (ws||!window.plus||!domready) {
-					return;
-				}
-					plus.navigator.setStatusBarBackground('#444');
-				};
-				if (window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener('plusready', plusReady, false);
-				}
-			// 监听DOMContentLoaded事件
-			document.addEventListener('DOMContentLoaded', function(){
-				domready=true;
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
 				plusReady();
 			}, false);
-			
 			// 导航栏事件
 			function clickTap(id, txt) {
 				var current = document.getElementsByClassName("active")[0].id;
@@ -65,6 +64,7 @@
 				document.getElementsByClassName(id)[0].style.display = "block";
 				document.getElementById(id).className = "active";
 			}
+
 			// 扫码页面的事件
 			// 点击批量扫码按钮事件
 			function isScanBatch() {
@@ -79,7 +79,7 @@
 			function setProcessNum() {
 				plus.nativeUI.prompt("请设定工序", function(e) {
 					if(e.index == 0) {
-						if (!e.value.replace(/\s*/g, "")) {
+						if(!e.value.replace(/\s*/g, "")) {
 							return;
 						}
 						if(Number(e.value)) {
@@ -218,5 +218,4 @@
 			</ul>
 		</div>
 	</body>
-
 </html>

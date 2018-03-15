@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -8,14 +9,18 @@
 		<link rel="stylesheet" href="../css/style.css" />
 		<script src="../js/common.js"></script>
 		<script>
-			document.addEventListener("plusready", onPlusReady, false);	
 			var result;
-			function onPlusReady() {
+			// 初始化
+			function plusReady() {
+				// 安卓机返回键
+				plus.key.addEventListener('backbutton', function() {
+					goback();
+				}, false);
 				// 初始化用户
 				user = JSON.parse(localStorage.getItem("user"))[0];
 				document.getElementById("username").innerText = user.Name;
-				
-				if (plus.storage.getItem("isScanBatch") == 'false') {
+
+				if(plus.storage.getItem("isScanBatch") == 'false') {
 					result = plus.storage.getItem("scanCodeResult");
 					// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
 					result = result.split(":");
@@ -32,9 +37,21 @@
 					result = plus.storage.getItem("batchList");
 					console.log(result);
 				}
+				// plus初始化后，执行 plusReady
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener('plusready', plusReady, false);
+				}
+				// DOM树初始化后，执行 plusReady
+				document.addEventListener('DOMContentLoaded', function() {
+					domready = true;
+					plusReady();
+				}, false);
 			}
 		</script>
 	</head>
+
 	<body style="background-color: #f5f5f5;">
 		<header>
 			<div class="goback" onclick="goback()">
@@ -71,4 +88,5 @@
 			</div>
 		</div>
 	</body>
+
 </html>

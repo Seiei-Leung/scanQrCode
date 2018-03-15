@@ -9,24 +9,51 @@
 		<link rel="stylesheet" href="../css/common.css" />
 		<link rel="stylesheet" href="../css/style.css" />
 		<script>
-			// 加载 plus
-			document.addEventListener("plusready", onPlusReady, false);
-			var 
+			// 初始化
+			var
+				ws, wo,
+				domready = false,
 				scan,
 				isScanBatch;
-			// 启动扫码
-			function onPlusReady() {
+
+			function plusReady() {
+				if(ws || !window.plus || !domready) {
+					return;
+				}
+				// 安卓机返回键
+				plus.key.addEventListener('backbutton', function() {
+					goback();
+				}, false);
+				// 获取窗口对象
+				ws = plus.webview.currentWebview();
+				wo = ws.opener();
 				// 初始化扫码功能
-				scan = new plus.barcode.Barcode('bcid');
-				scan.onmarked = onmarked;
+				ws.addEventListener('show', function() {
+					scan = new plus.barcode.Barcode('bcid');
+					scan.onmarked = onmarked;
+					scan.start();
+				}, false);
+				ws.show('pop-in');
 				// 初始化页面
 				isScanBatch = plus.storage.getItem("isScanBatch");
-				if (isScanBatch == "true") {
+				if(isScanBatch == "true") {
 					document.getElementById("forBatchSubmit").style.display = "block";
 				} else {
 					document.getElementById("forBatchSubmit").style.display = "none";
 				}
 			}
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
+				plusReady();
+			}, false);
+
 			// 关闭扫码
 			function cancelScan() {
 				scan.cancel(); // 停止
@@ -34,24 +61,25 @@
 			}
 			// 扫码成功返回
 			var batchList = [];
+
 			function onmarked(type, result, file) {
-				if (isScanBatch == "true") {
+				if(isScanBatch == "true") {
 					scan.cancel();
 					batchList.push(result);
-					plus.nativeUI.alert("扫码成功！", function(){
+					plus.nativeUI.alert("扫码成功！", function() {
 						scan.start();
 					}, "信息框", "确定");
 				} else {
 					plus.storage.setItem("scanCodeResult", result);
 					cancelScan();
-    				clicked("coderesult.html");
+					clicked("coderesult.html");
 				}
 			}
 			// 批量确定
 			function batchSubmit() {
 				batchList = JSON.stringify(batchList);
-    			plus.storage.setItem("batchList", batchList);
-    			clicked("coderesult.html");
+				plus.storage.setItem("batchList", batchList);
+				clicked("coderesult.html");
 			}
 			// 打开闪光灯
 			function setFlash() {
