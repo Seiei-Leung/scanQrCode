@@ -4,45 +4,122 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="misapplication-tap-highlight" content="no"/>
+		<meta name="HandheldFriendly" content="true"/>
+		<meta name="MobileOptimized" content="320"/>
 		<title>移动工票</title>
+		<script type="text/javascript" src="../js/common.js"></script>
 		<script type="text/javascript">
 			// 禁止选择
-			document.oncontextmenu=function(){
+			document.oncontextmenu = function() {
 				return false;
 			};
+			var
+				user,
+				isOrnot,
+				processNum;
 			// plusready 比 domcontentready 晚
-			document.addEventListener('plusready', function() {
-				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			function plusReady() {
+				// 设置手机顶部栏颜色
 				plus.navigator.setStatusBarBackground('#444');
-				
-			});
+				// 初始化用户
+				// [{"Id":"873784e4-d773-4f1d-89a9-0f30ca52ea52","TypeCode":"1002","Code":"ZC-DN-LZC","EmployeeNo":null,"EmployeeName":null,"Name":"电脑-梁智承","PW":"123456","MnemonicCode":null,"QueryMons":12,"QueryScope":12,"Grade":5,"IsAdmin":false,"Del":false,"BUser":"debug","BTime":"2017-11-21T11:30:51","EUser":"debug","ETime":"2017-11-21T11:31:48","State":0,"LastOnline":"2017-11-21T00:00:00","LoginIP":"0.0.0.0","LoginOS":0,"LoginPort":"2001","HeadPicIdx":0,"SMTP":"xx","EmailName":"xx","EmailPwd":"xx","Sex":0,"Vcard":null,"isBroadcast":null,"isEditUserData":null,"isSendNotice":null,"isSendSMS":null,"CreateRooms":null,"orderID":null,"DeptCode":null,"PhotoData":null,"birthday":null,"job":null,"officeTelephone":null,"Hometown":null,"adress":null,"Education":null,"Post":null,"school":null,"MobilePhone":null,"Memo":null,"PW_Back":null,"PW_Back2":null,"UnCheckUser":false,"LoginInfo":null,"Power":null,"On_IM_Off":false,"HideNotice":false,"PW2":null,"On_IM_OffTT":false,"WarnNotice":false,"ProSupplier":null,"MatSupplier":null,"CanNotLogin":false}]
+				user = JSON.parse(localStorage.getItem("user"))[0];
+				document.getElementById("username").innerText = user.Name;
+				// 初始化是否批量扫码按钮
+				isOrnot = plus.storage.getItem("isScanBatch");
+				if(isOrnot == "true") {
+					document.getElementById("isScanBatch").checked = true;
+				} else {
+					document.getElementById("isScanBatch").checked = false;
+				}
+				// 初始化工序设定
+				processNum = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
+				document.getElementById("processNum").innerText = processNum;
+			};
+			var ws=null,domready=false;
+			// plusready 比 domcontentready 晚
+			function plusReady() {
+				if (ws||!window.plus||!domready) {
+					return;
+				}
+					plus.navigator.setStatusBarBackground('#444');
+				};
+				if (window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener('plusready', plusReady, false);
+				}
+			// 监听DOMContentLoaded事件
+			document.addEventListener('DOMContentLoaded', function(){
+				domready=true;
+				plusReady();
+			}, false);
+			
+			// 导航栏事件
+			function clickTap(id, txt) {
+				var current = document.getElementsByClassName("active")[0].id;
+				document.getElementsByTagName("header")[0].getElementsByClassName("title")[0].innerText = txt
+				document.getElementsByClassName(current)[0].style.display = "none";
+				document.getElementsByClassName("active")[0].className = "";
+				document.getElementsByClassName(id)[0].style.display = "block";
+				document.getElementById(id).className = "active";
+			}
+			// 扫码页面的事件
+			// 点击批量扫码按钮事件
+			function isScanBatch() {
+				isOrnot = document.getElementById("isScanBatch").checked;
+				if(isOrnot) {
+					plus.storage.setItem("isScanBatch", "true");
+				} else {
+					plus.storage.setItem("isScanBatch", "false");
+				}
+			}
+			// 点击设定工序事件事件
+			function setProcessNum() {
+				plus.nativeUI.prompt("请设定工序", function(e) {
+					if(e.index == 0) {
+						if (!e.value.replace(/\s*/g, "")) {
+							return;
+						}
+						if(Number(e.value)) {
+							plus.storage.setItem("processNum", e.value);
+							document.getElementById("processNum").innerText = e.value;
+						} else {
+							setTimeout(plus.nativeUI.alert("请输入数字"), 1000);
+						}
+					}
+				}, "设定工序", "", ["确定", "取消"]);
+			}
 		</script>
 		<link rel="stylesheet" href="../css/common.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../css/button.min.css" />
 	</head>
 
 	<body style="background-color: #f5f5f5;">
 		<header>
 			<div class="title">移动工票</div>
 		</header>
+		<!-- 首页 -->
 		<div class="contain-wrapper index">
 			<div class="personalMsg">
 				<div class="avatar">
 					<img src="../img/tab-profile-active.png" />
 				</div>
 				<div class="txt">
-					<div class="name">郑玉珍</div>
-					<div class="id">00004</div>
+					<div class="name" id="username"></div>
+					<div class="id" id="userid">00004</div>
 				</div>
 			</div>
-			<a class="qrcode" href="barcode.html">
+			<div class="qrcode" id="barcode.html" onclick="clicked(this.id)">
 				<div class="icon">
 					<img src="../img/be76ab4278df7c048266e4279cc3136c.png" />
 				</div>
 				<div class="txt">
 					扫码计件
 				</div>
-			</a>
+			</div>
 			<div class="workTables">
 				<a href="javascript:void(0);" class="item">
 					<div class="icon">
@@ -97,9 +174,32 @@
 				</a>
 			</div>
 		</div>
+		<!-- 设置页面 -->
+		<div class="contain-wrapper setting" style="display: none;">
+			<ul class="settingList">
+				<li class="item">
+					<div class="txt">
+						批量扫码
+					</div>
+					<div class="input-wrapper">
+						<label class="el-switch el-switch-sm" onclick="isScanBatch()">
+							<input type="checkbox" name="switch" id="isScanBatch">
+							<span class="el-switch-style"></span>
+						</label>
+					</div>
+				</li>
+				<li class="item" onclick="setProcessNum()">
+					<div class="txt">
+						工序设定
+					</div>
+					<div class="input-wrapper" id="processNum">
+					</div>
+				</li>
+			</ul>
+		</div>
 		<div class="navbar">
 			<ul>
-				<li class="active">
+				<li class="active" id="index" onclick="clickTap(this.id, '移动工票')">
 					<div class="icon-home3"></div>
 					首页
 				</li>
@@ -107,11 +207,9 @@
 					<div class="icon-table2"></div>
 					说明
 				</li>
-				<li>
-					<a href="setting.html">
-						<div class="icon-cog"></div>
-						设置
-					</a>
+				<li id="setting" onclick="clickTap(this.id, '设置')">
+					<div class="icon-cog"></div>
+					设置
 				</li>
 				<li>
 					<div class="icon-user"></div>

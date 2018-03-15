@@ -11,18 +11,27 @@
 			document.addEventListener("plusready", onPlusReady, false);	
 			var result;
 			function onPlusReady() {
-				result = plus.storage.getItem("scanCodeResult");
-				// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
-				result = result.split(":");
-				document.getElementById("kind").getElementsByTagName("span")[0].innerText = result[0];
-				document.getElementById("color").getElementsByTagName("span")[0].innerText = result[2];
-				document.getElementById("count").getElementsByTagName("span")[0].innerText = result[3];
-				document.getElementById("dyelotNum").getElementsByTagName("span")[0].innerText = result[4];
-				document.getElementById("bundleNum").getElementsByTagName("span")[0].innerText = result[5];
-				document.getElementById("bedNum").getElementsByTagName("span")[0].innerText = result[6];
-				document.getElementById("brand").getElementsByTagName("span")[0].innerText = result[7];
-				document.getElementById("makeNum").getElementsByTagName("span")[0].innerText = result[8];
-				document.getElementById("sizeNum").getElementsByTagName("span")[0].innerText = result[9];
+				// 初始化用户
+				user = JSON.parse(localStorage.getItem("user"))[0];
+				document.getElementById("username").innerText = user.Name;
+				
+				if (plus.storage.getItem("isScanBatch") == 'false') {
+					result = plus.storage.getItem("scanCodeResult");
+					// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
+					result = result.split(":");
+					document.getElementById("kind").getElementsByTagName("span")[0].innerText = result[0];
+					document.getElementById("color").getElementsByTagName("span")[0].innerText = result[2];
+					document.getElementById("count").getElementsByTagName("span")[0].innerText = result[3];
+					document.getElementById("dyelotNum").getElementsByTagName("span")[0].innerText = result[4];
+					document.getElementById("bundleNum").getElementsByTagName("span")[0].innerText = result[5];
+					document.getElementById("bedNum").getElementsByTagName("span")[0].innerText = result[6];
+					document.getElementById("brand").getElementsByTagName("span")[0].innerText = result[7];
+					document.getElementById("makeNum").getElementsByTagName("span")[0].innerText = result[8];
+					document.getElementById("sizeNum").getElementsByTagName("span")[0].innerText = result[9];
+				} else {
+					result = plus.storage.getItem("batchList");
+					console.log(result);
+				}
 			}
 		</script>
 	</head>
@@ -37,7 +46,7 @@
 			<div class="personalMsg">
 				<div class="name">
 					<div class="title">姓名：</div>
-					<div class="txt">郑玉珍</div>
+					<div class="txt" id="username"></div>
 				</div>
 				<div class="id">
 					<div class="title">工号：</div>

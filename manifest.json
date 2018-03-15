@@ -1,12 +1,12 @@
-﻿{
+{
     "@platforms": ["android", "iPhone", "iPad"],
-    "id": "",/*应用的标识，创建应用时自动生成，勿手动修改*/
-    "name": "mobileTicket",/*应用名称，程序桌面图标名称*/
+    "id": "H56D37985",/*应用的标识，创建应用时自动生成，勿手动修改*/
+    "name": "移动工票",/*应用名称，程序桌面图标名称*/
     "version": {
         "name": "1.0",/*应用版本名称*/
         "code": ""
     },
-    "description": "",/*应用描述信息*/
+    "description": "工厂扫码",/*应用描述信息*/
     "icons": {
         "72": "icon.png"
     },
@@ -26,15 +26,11 @@
         "Console": {
             "description": "跟踪调试输出日志"
         },
-        "Contacts": {
-            "description": "访问系统联系人信息"
-        },
+        
         "Events": {
             "description": "应用扩展事件"
         },
-        "Maps": {
-            "description": "管理地图插件"
-        },
+        
         "Speech": {
             "description": "管理语音识别插件"
         }
@@ -62,7 +58,7 @@
                 "keystore": "",/*Android应用打包使用的密钥库文件*/
                 "password": "",/*Android应用打包使用密钥库中证书的密码*/
                 "aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-               "permissions": ["<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-feature android:name=\"android.hardware.camera.autofocus\"/>","<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>","<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"]
+               "permissions": ["<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.SEND_SMS\"/>","<uses-permission android:name=\"android.permission.INTERNET\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-feature android:name=\"android.hardware.camera.autofocus\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.WRITE_SMS\"/>","<uses-permission android:name=\"android.permission.READ_SMS\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>"]
 				/*使用Native.js调用原生安卓API需要使用到的系统权限*/
             },
             "orientation": [
@@ -134,6 +130,112 @@
                     "xxhdpi": ""/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
             }
-        }
-    }
+        },"ads":{"rp":false,"splash":false,"push":false},"adid":""
+    },
+	"dependencies":{
+		"pages": {
+			"plus/coderesult.html": {
+				"href": "plus/coderesult.html",
+				"resources": [
+					"css/common.css",
+					"css/style.css",
+					"css/fonts/icomoon.eot",
+					"css/fonts/icomoon.ttf",
+					"css/fonts/icomoon.woff",
+					"css/fonts/icomoon.svg",
+					"js/common.js"
+				],
+				"priority": 0
+			},
+			"plus/barcode.html": {
+				"href": "plus/barcode.html",
+				"resources": [
+					"js/common.js",
+					"css/common.css",
+					"css/style.css",
+					"css/fonts/icomoon.eot",
+					"css/fonts/icomoon.ttf",
+					"css/fonts/icomoon.woff",
+					"css/fonts/icomoon.svg"
+				],
+				"refer": [
+					"plus/coderesult.html"
+				],
+				"priority": 0
+			},
+			"plus/setting.html": {
+				"href": "plus/setting.html",
+				"resources": [
+					"css/common.css",
+					"css/style.css",
+					"css/fonts/icomoon.eot",
+					"css/fonts/icomoon.ttf",
+					"css/fonts/icomoon.woff",
+					"css/fonts/icomoon.svg",
+					"css/button.min.css",
+					"js/common.js"
+				],
+				"refer": [
+					"plus/index.html"
+				],
+				"priority": 1
+			},
+			"plus/index.html": {
+				"href": "plus/index.html",
+				"resources": [
+					"js/common.js",
+					"css/common.css",
+					"css/style.css",
+					"css/fonts/icomoon.eot",
+					"css/fonts/icomoon.ttf",
+					"css/fonts/icomoon.woff",
+					"css/fonts/icomoon.svg",
+					"img/tab-profile-active.png",
+					"img/be76ab4278df7c048266e4279cc3136c.png",
+					"img/timg.jpg"
+				],
+				"refer": [
+					"plus/barcode.html",
+					"plus/setting.html"
+				],
+				"priority": 0
+			},
+			"signin.html": {
+				"href": "signin.html",
+				"resources": [
+					"css/common.css"
+				],
+				"refer": [
+					"plus/index.html"
+				],
+				"priority": 0
+			}
+		},
+		"idle": {
+			"resources": [
+				"css/demo.html",
+				"css/demo-files/demo.css",
+				"plus/barcodes.html",
+				"css/selection.json",
+				"img/TB2CaDughTI8KJjSspiXXbM4FXa_!!585435480.png",
+				"plus/scanResult.html",
+				"img/TB2vSDAgnnI8KJjSszgXXc8ApXa_!!585435480.png",
+				"css/Read Me.txt",
+				"css/demo-files/demo.js",
+				"img/TB20pw_b8fM8KJjSZFhXXcRyFXa_!!585435480.png"
+			]
+		}
+	},
+	"unpackage":[
+	  "css/demo-files/demo.css",
+	  "css/demo-files/demo.js",
+	  "img/TB20pw_b8fM8KJjSZFhXXcRyFXa_!!585435480.png",
+	  "img/TB2CaDughTI8KJjSspiXXbM4FXa_!!585435480.png",
+	  "img/TB2vSDAgnnI8KJjSszgXXc8ApXa_!!585435480.png",
+	  "plus/barcodes.html",
+	  "plus/scanResult.html",
+	  "css/Read Me.txt",
+	  "css/demo.html",
+	  "css/selection.json"
+	]
 }
