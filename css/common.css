@@ -77,7 +77,13 @@ header .title {
 	font-size: 16px;
 	font-weight: normal;
 }
-.index .personalMsg .txt .name {
+.index .personalMsg .txt .item{
+	display: inline-block;
+	margin-right: 1em;
+	vertical-align: top;
+	line-height: 1.4em;
+}
+.index .personalMsg .txt .username {
 	font-weight: bold;
 }
 .index .qrcode {
@@ -260,7 +266,7 @@ header .title {
 	display: inline-block;
 	line-height: 1.5em;
 }
-.codeResult .resultList {
+.codeResult .resultList ul{
 	box-sizing: border-box;
 	width: 95%;
 	margin: auto;
@@ -273,8 +279,7 @@ header .title {
 .codeResult .submit button {
 	display: block;
 	width: 80%;
-	margin: auto;
-	margin-top: 15px;
+	margin:15px auto 30px auto;
 	line-height: 1.5em;
 	color: #fff;
 	background-color: #4E9FEF;

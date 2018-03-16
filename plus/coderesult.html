@@ -9,9 +9,17 @@
 		<link rel="stylesheet" href="../css/style.css" />
 		<script src="../js/common.js"></script>
 		<script>
-			var result;
+			var 
+				ws, wo,
+				domready = false,
+				resultList,
+				result,
+				domItem;
 			// 初始化
 			function plusReady() {
+				if(ws || !window.plus || !domready) {
+					return;
+				}
 				// 安卓机返回键
 				plus.key.addEventListener('backbutton', function() {
 					goback();
@@ -19,40 +27,52 @@
 				// 初始化用户
 				user = JSON.parse(localStorage.getItem("user"))[0];
 				document.getElementById("username").innerText = user.Name;
-
-				if(plus.storage.getItem("isScanBatch") == 'false') {
+				// 初始化扫码数据
+				if(plus.storage.getItem("isScanBatch") == 'false' || !plus.storage.getItem("isScanBatch")) {
 					result = plus.storage.getItem("scanCodeResult");
-					// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
-					result = result.split(":");
-					document.getElementById("kind").getElementsByTagName("span")[0].innerText = result[0];
-					document.getElementById("color").getElementsByTagName("span")[0].innerText = result[2];
-					document.getElementById("count").getElementsByTagName("span")[0].innerText = result[3];
-					document.getElementById("dyelotNum").getElementsByTagName("span")[0].innerText = result[4];
-					document.getElementById("bundleNum").getElementsByTagName("span")[0].innerText = result[5];
-					document.getElementById("bedNum").getElementsByTagName("span")[0].innerText = result[6];
-					document.getElementById("brand").getElementsByTagName("span")[0].innerText = result[7];
-					document.getElementById("makeNum").getElementsByTagName("span")[0].innerText = result[8];
-					document.getElementById("sizeNum").getElementsByTagName("span")[0].innerText = result[9];
+					plus.storage.setItem("scanCodeResult", '');
+					if (result) {
+//						plus.storage.setItem("scanCodeResult", '');
+						// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
+						result = result.split(":");
+						domItem = document.createElement('ul');
+						domItem.innerHTML = '<li class="kind">部位：<span>' + result[0] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="count">数量：<span>' + result[3] + '</span></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
+						document.getElementById('resultList').appendChild(domItem);
+					}
 				} else {
-					result = plus.storage.getItem("batchList");
+					resultList = plus.storage.getItem("batchList");
+					plus.storage.setItem("batchList", '');
+					resultList = JSON.parse(resultList);
+					resultList.forEach(function(result) {
+						result = result.split(":");
+						domItem = document.createElement('ul');
+						domItem.innerHTML = '<li class="kind">种类：<span>' + result[0] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="count">数量：<span>' + result[3] + '</span></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
+						document.getElementById('resultList').appendChild(domItem);
+					})
 					console.log(result);
 				}
-				// plus初始化后，执行 plusReady
-				if(window.plus) {
-					plusReady();
-				} else {
-					document.addEventListener('plusready', plusReady, false);
-				}
-				// DOM树初始化后，执行 plusReady
-				document.addEventListener('DOMContentLoaded', function() {
-					domready = true;
-					plusReady();
-				}, false);
+			}
+
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
+				plusReady();
+			}, false);
+			
+			function goback() {
+				plus.webview.currentWebview().close("slide-out-left", null);
+				plus.webview.getWebviewById( "barcode.html" ).show();
 			}
 		</script>
 	</head>
 
-	<body style="background-color: #f5f5f5;">
+	<body style="background-color: #e5e5e5;">
 		<header>
 			<div class="goback" onclick="goback()">
 				<i class="icon-chevron-left"></i>
@@ -70,18 +90,7 @@
 					<div class="txt">00004</div>
 				</div>
 			</div>
-			<div class="resultList">
-				<ul>
-					<li id="kind">种类：<span></span></li>
-					<li id="color">颜色：<span></span></li>
-					<li id="count">数量：<span></span></li>
-					<li id="dyelotNum">缸号：<span></span></li>
-					<li id="bundleNum">扎号：<span></span></li>
-					<li id="bedNum">床次：<span></span></li>
-					<li id="brand">品牌：<span></span></li>
-					<li id="makeNum">制单号：<span></span></li>
-					<li id="sizeNum">尺码：<span></span></li>
-				</ul>
+			<div class="resultList" id="resultList">
 			</div>
 			<div class="submit">
 				<button>确 认</button>

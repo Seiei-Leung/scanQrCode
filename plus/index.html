@@ -32,7 +32,12 @@
 				// 初始化用户
 				// [{"Id":"873784e4-d773-4f1d-89a9-0f30ca52ea52","TypeCode":"1002","Code":"ZC-DN-LZC","EmployeeNo":null,"EmployeeName":null,"Name":"电脑-梁智承","PW":"123456","MnemonicCode":null,"QueryMons":12,"QueryScope":12,"Grade":5,"IsAdmin":false,"Del":false,"BUser":"debug","BTime":"2017-11-21T11:30:51","EUser":"debug","ETime":"2017-11-21T11:31:48","State":0,"LastOnline":"2017-11-21T00:00:00","LoginIP":"0.0.0.0","LoginOS":0,"LoginPort":"2001","HeadPicIdx":0,"SMTP":"xx","EmailName":"xx","EmailPwd":"xx","Sex":0,"Vcard":null,"isBroadcast":null,"isEditUserData":null,"isSendNotice":null,"isSendSMS":null,"CreateRooms":null,"orderID":null,"DeptCode":null,"PhotoData":null,"birthday":null,"job":null,"officeTelephone":null,"Hometown":null,"adress":null,"Education":null,"Post":null,"school":null,"MobilePhone":null,"Memo":null,"PW_Back":null,"PW_Back2":null,"UnCheckUser":false,"LoginInfo":null,"Power":null,"On_IM_Off":false,"HideNotice":false,"PW2":null,"On_IM_OffTT":false,"WarnNotice":false,"ProSupplier":null,"MatSupplier":null,"CanNotLogin":false}]
 				user = JSON.parse(localStorage.getItem("user"))[0];
-				document.getElementById("username").innerText = user.Name;
+				document.getElementsByClassName("username")[0].innerText = user.EmployeeName_User;
+				document.getElementsByClassName("userid")[0].innerText = user.EmployeeNo;
+				document.getElementsByClassName("job")[0].innerText = user.JobA;
+				document.getElementsByClassName("workGroup")[0].innerText = user.WorkGroup;
+				document.getElementsByClassName("workShop")[0].innerText = user.WorkShop;
+
 				// 初始化是否批量扫码按钮
 				isOrnot = plus.storage.getItem("isScanBatch");
 				if(isOrnot == "true") {
@@ -108,8 +113,17 @@
 					<img src="../img/tab-profile-active.png" />
 				</div>
 				<div class="txt">
-					<div class="name" id="username"></div>
-					<div class="id" id="userid">00004</div>
+					<div class="item">
+						<div class="username"></div>
+						<div class="userid"></div>
+					</div>
+					<div class="item">
+						<div class="job"></div>
+						<div class="workGroup"></div>
+					</div>
+					<div class="item">
+						<div class="workShop"></div>
+					</div>
 				</div>
 			</div>
 			<div class="qrcode" id="barcode.html" onclick="clicked(this.id)">
@@ -218,4 +232,5 @@
 			</ul>
 		</div>
 	</body>
+
 </html>
