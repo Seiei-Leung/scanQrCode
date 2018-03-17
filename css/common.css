@@ -54,10 +54,12 @@ header .title {
 	width: 100%;
 }
 /* 首页 */
-.index .personalMsg {
+.index .personalMsg,
+.system .personalMsg {
 	background-color: #e9e9e9;
 }
-.index .personalMsg .avatar {
+.index .personalMsg .avatar,
+.system .personalMsg .avatar {
 	display: inline-block;
 	margin: 10px;
 	width: 50px;
@@ -66,24 +68,28 @@ header .title {
 	background-color: #fff;
 	border-radius: 100%;
 }
-.index .personalMsg .avatar img{
+.index .personalMsg .avatar img,
+.system .personalMsg .avatar img{
 	width: 100%;
 	height: 100%;
 }
-.index .personalMsg .txt {
+.index .personalMsg .txt,
+.system .personalMsg .txt {
 	display: inline-block;
 	margin-top: 15px;
 	vertical-align: top;
 	font-size: 16px;
 	font-weight: normal;
 }
-.index .personalMsg .txt .item{
+.index .personalMsg .txt .item,
+.system .personalMsg .txt .item{
 	display: inline-block;
 	margin-right: 1em;
 	vertical-align: top;
 	line-height: 1.4em;
 }
-.index .personalMsg .txt .username {
+.index .personalMsg .txt .username,
+.system .personalMsg .txt .username  {
 	font-weight: bold;
 }
 .index .qrcode {
@@ -147,14 +153,15 @@ header .title {
 	vertical-align: top;
 	font-size: 14px;
 }
+.navbar {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
 .navbar ul{
 	display: flex;
 	display: -webkit-flex;
 	justify-content: space-around;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	padding: 8px 0;
 	font-size: 0;
 	background-color: #E9E9E9;
 	border-top: 1px solid #DDDDDD;
@@ -165,6 +172,7 @@ header .title {
 }
 .navbar li {
 	display: inline-block;
+	padding: 8px 0;
 	width: 25%;
 	font-size: 18px;
 	text-align: center;
@@ -173,9 +181,10 @@ header .title {
 	display: block;
 }
 .navbar .active {
-	color: #449FDB;
+	color: #20A0FF;
+	background-color: #d1d1d1;
 }.navbar .active div {
-	color: #449FDB;
+	color: #20A0FF;
 }
 
 /* 登陆页面 */
@@ -255,7 +264,8 @@ header .title {
 	display: none;
 }
 
-/* 扫码成功结果 */
+/* 扫码成功结果页面 */
+/* 今日产量页面 */
 .codeResult .personalMsg {
 	padding: 4px 10px;
 	background-color: #fff;
@@ -286,6 +296,61 @@ header .title {
 	font-size: 25px;
 	border-radius: 4px;
 }
+/* 今日产量页面 */
+.todayoutput .resultList {
+	margin-bottom: 60px;
+}
+.todayoutput .collect{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
+	line-height: 2.5em;
+	border-top: 1px solid #ddd;
+	background-color: #fff;
+}
+
+/* 工作台 */
+.workbench {
+	padding: 5px;
+}
+.workbench .item-wrapper {
+	box-sizing: border-box;
+	width: 98%;
+	height: 50px;
+	margin: 5px auto;
+	padding: 0 10px;
+	font-size: 0;
+	background-color: #fff;
+}
+.workbench .item-wrapper .item {
+	display: inline-block;
+	width: 50%;
+}
+.workbench .item-wrapper .item .icon {
+	display: inline-block;
+	margin-top: 10px;
+	width: 30px;
+	height: 30px;
+	vertical-align: top;
+	border-radius: 100%;
+	overflow: hidden;
+}
+.workbench .item-wrapper .item .icon img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+.workbench .item-wrapper .item .txt {
+	display: inline-block;
+	margin-left: 0.5em;
+	font-size: 14px;
+	line-height: 50px;
+	vertical-align: top;
+}
 
 /* 设置页面 */
 .setting .settingList {
@@ -311,4 +376,17 @@ header .title {
 	margin-top: 6px;
 	line-height: 1;
 	color: #999;
+}
+
+/* 系统页面 */
+.system .signout button {
+	display: block;
+	margin: auto;
+	margin-top: 15px;
+	width: 90%;
+	line-height: 1.8em;
+	font-size: 20px;
+	border-radius: 4px;
+	color: #fff;
+	background-color: #20A0FF;
 }

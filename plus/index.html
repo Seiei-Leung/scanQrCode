@@ -32,11 +32,11 @@
 				// 初始化用户
 				// [{"Id":"873784e4-d773-4f1d-89a9-0f30ca52ea52","TypeCode":"1002","Code":"ZC-DN-LZC","EmployeeNo":null,"EmployeeName":null,"Name":"电脑-梁智承","PW":"123456","MnemonicCode":null,"QueryMons":12,"QueryScope":12,"Grade":5,"IsAdmin":false,"Del":false,"BUser":"debug","BTime":"2017-11-21T11:30:51","EUser":"debug","ETime":"2017-11-21T11:31:48","State":0,"LastOnline":"2017-11-21T00:00:00","LoginIP":"0.0.0.0","LoginOS":0,"LoginPort":"2001","HeadPicIdx":0,"SMTP":"xx","EmailName":"xx","EmailPwd":"xx","Sex":0,"Vcard":null,"isBroadcast":null,"isEditUserData":null,"isSendNotice":null,"isSendSMS":null,"CreateRooms":null,"orderID":null,"DeptCode":null,"PhotoData":null,"birthday":null,"job":null,"officeTelephone":null,"Hometown":null,"adress":null,"Education":null,"Post":null,"school":null,"MobilePhone":null,"Memo":null,"PW_Back":null,"PW_Back2":null,"UnCheckUser":false,"LoginInfo":null,"Power":null,"On_IM_Off":false,"HideNotice":false,"PW2":null,"On_IM_OffTT":false,"WarnNotice":false,"ProSupplier":null,"MatSupplier":null,"CanNotLogin":false}]
 				user = JSON.parse(localStorage.getItem("user"))[0];
-				document.getElementsByClassName("username")[0].innerText = user.EmployeeName_User;
-				document.getElementsByClassName("userid")[0].innerText = user.EmployeeNo;
-				document.getElementsByClassName("job")[0].innerText = user.JobA;
-				document.getElementsByClassName("workGroup")[0].innerText = user.WorkGroup;
-				document.getElementsByClassName("workShop")[0].innerText = user.WorkShop;
+				document.getElementsByClassName("username")[0].innerText = document.getElementsByClassName("username")[1].innerText = user.EmployeeName_User;
+				document.getElementsByClassName("userid")[0].innerText = document.getElementsByClassName("userid")[1].innerText = user.EmployeeNo;
+				document.getElementsByClassName("job")[0].innerText = document.getElementsByClassName("job")[1].innerText = user.JobA;
+				document.getElementsByClassName("workGroup")[0].innerText = document.getElementsByClassName("workGroup")[1].innerText = user.WorkGroup;
+				document.getElementsByClassName("workShop")[0].innerText = document.getElementsByClassName("workShop")[1].innerText = user.WorkShop;
 
 				// 初始化是否批量扫码按钮
 				isOrnot = plus.storage.getItem("isScanBatch");
@@ -96,6 +96,11 @@
 					}
 				}, "设定工序", "", ["确定", "取消"]);
 			}
+			// 登出事件
+			function signout() {
+				localStorage.removeItem("user");
+				location.assign("../signin.html");
+			}
 		</script>
 		<link rel="stylesheet" href="../css/common.css" />
 		<link rel="stylesheet" href="../css/style.css" />
@@ -135,7 +140,7 @@
 				</div>
 			</div>
 			<div class="workTables">
-				<a href="javascript:void(0);" class="item">
+				<a href="javascript:void(0);" class="item" onclick="clicked(this.id)" id="todayoutput.html">
 					<div class="icon">
 						<img src="../img/timg.jpg" />
 					</div>
@@ -148,7 +153,7 @@
 						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
-						今日产量明细
+						今日产量汇总
 					</div>
 				</a>
 				<div class="horizontal-line"></div>
@@ -157,7 +162,7 @@
 						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
-						今日产量明细
+						历史产量明细
 					</div>
 				</a>
 				<a href="javascript:void(0);" class="item">
@@ -165,27 +170,172 @@
 						<img src="../img/timg.jpg" />
 					</div>
 					<div class="txt">
-						今日产量明细
+						历史产量统计
+					</div>
+				</a>
+				<div class="horizontal-line"></div>
+				<a href="javascript:void(0);" class="item">
+					<div class="icon">
+						<img src="../img/timg.jpg" />
+					</div>
+					<div class="txt">
+						代人计件
+					</div>
+				</a>
+				<a href="javascript:void(0);" class="item">
+					<div class="icon">
+						<img src="../img/timg.jpg" />
+					</div>
+					<div class="txt">
+						手工录入
+					</div>
+				</a>
+				<div class="horizontal-line"></div>
+				<a href="javascript:void(0);" class="item">
+					<div class="icon">
+						<img src="../img/timg.jpg" />
+					</div>
+					<div class="txt">
+						领货登记
+					</div>
+				</a>
+				<a href="javascript:void(0);" class="item">
+					<div class="icon">
+						<img src="../img/timg.jpg" />
+					</div>
+					<div class="txt">
+						领货记录
 					</div>
 				</a>
 			</div>
-			<div class="others">
-				<a href="javascript:void(0);" class="item">
+		</div>
+		<!-- 工作台页面 -->
+		<div class="contain-wrapper workbench" style="display: none;">
+			<div class="item-wrapper">
+				<div class="item">
 					<div class="icon">
-						<img src="../img/timg.jpg" />
+						<img src="../img/icon_4.png" />
 					</div>
 					<div class="txt">
-						今日产量明细
+						呼叫组长
 					</div>
-				</a>
-				<a href="javascript:void(0);" class="item">
+				</div>
+				<div class="item">
 					<div class="icon">
-						<img src="../img/timg.jpg" />
+						<img src="../img/icon_21.png" />
 					</div>
 					<div class="txt">
-						今日产量明细
+						消息中心
 					</div>
-				</a>
+				</div>
+			</div>
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_4.png" />
+					</div>
+					<div class="txt">
+						查询记账消息
+					</div>
+				</div>
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_21.png" />
+					</div>
+					<div class="txt">
+						设置车位工序
+					</div>
+				</div>
+			</div>
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_4.png" />
+					</div>
+					<div class="txt">
+						修改载片数量
+					</div>
+				</div>
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_21.png" />
+					</div>
+					<div class="txt">
+						修改记账消息
+					</div>
+				</div>
+			</div>
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_4.png" />
+					</div>
+					<div class="txt">
+						返工登记
+					</div>
+				</div>
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_21.png" />
+					</div>
+					<div class="txt">
+						返工记录
+					</div>
+				</div>
+			</div>
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_4.png" />
+					</div>
+					<div class="txt">
+						报废登记
+					</div>
+				</div>
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_21.png" />
+					</div>
+					<div class="txt">
+						报废记录
+					</div>
+				</div>
+			</div>
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_4.png" />
+					</div>
+					<div class="txt">
+						实时看板
+					</div>
+				</div>
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_21.png" />
+					</div>
+					<div class="txt">
+						生产进度
+					</div>
+				</div>
+			</div>
+			<div class="item-wrapper">
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_4.png" />
+					</div>
+					<div class="txt">
+						员工产量查询
+					</div>
+				</div>
+				<div class="item">
+					<div class="icon">
+						<img src="../img/icon_21.png" />
+					</div>
+					<div class="txt">
+						组长计数
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- 设置页面 -->
@@ -211,21 +361,45 @@
 				</li>
 			</ul>
 		</div>
+		<!-- 系统页面 -->
+		<div class="contain-wrapper system" style="display: none;">
+			<div class="personalMsg">
+				<div class="avatar">
+					<img src="../img/tab-profile-active.png" />
+				</div>
+				<div class="txt">
+					<div class="item">
+						<div class="username"></div>
+						<div class="userid"></div>
+					</div>
+					<div class="item">
+						<div class="job"></div>
+						<div class="workGroup"></div>
+					</div>
+					<div class="item">
+						<div class="workShop"></div>
+					</div>
+				</div>
+			</div>
+			<div class="signout">
+				<button onclick="signout()">登出</button>
+			</div>
+		</div>
 		<div class="navbar">
 			<ul>
 				<li class="active" id="index" onclick="clickTap(this.id, '移动工票')">
 					<div class="icon-home3"></div>
 					首页
 				</li>
-				<li>
+				<li id="workbench" onclick="clickTap(this.id, '工作台')">
 					<div class="icon-table2"></div>
-					说明
+					工作台
 				</li>
 				<li id="setting" onclick="clickTap(this.id, '设置')">
 					<div class="icon-cog"></div>
 					设置
 				</li>
-				<li>
+				<li id="system" onclick="clickTap(this.id, '系统')">
 					<div class="icon-user"></div>
 					系统
 				</li>

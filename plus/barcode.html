@@ -63,54 +63,59 @@
 				scan.close(); // 关闭
 			}
 			// 扫码成功返回
-			var batchList = [];
-			var xhr;
-			var geturl = "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/insertTicket";
-			var data, sendData;
+			var 
+				batchList = [],
+			    xhr,
+			    geturl = "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/insertTicket",
+			    sendData,
+			    rep;
+
 			function onmarked(type, result, file) {
-				if(isScanBatch == "true") {
-					scan.cancel();
-					console.log(batchList);
-					console.log(result);
-					batchList.push(result);
-					plus.nativeUI.alert("扫码成功！", function() {
-						scan.start();
-					}, "信息框", "确定");
-				} else {
-					Scanresult = result.split(":");
-					sendData = {};
-					sendData.data = {}
-					sendData.empcode = JSON.parse(localStorage.getItem("user"))[0].EmployeeNo;
-					sendData.orderno = Scanresult[8];
-					sendData.seqno = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
-					sendData.bedno = Scanresult[6];
-					sendData.groupno = Scanresult[5];
-					sendData.color = Scanresult[2];
-					sendData.sizes = Scanresult[9];
-					sendData.quantity = Scanresult[3];
-					//data = JSON.stringify(data);
-					//alert(data);
-					//console.log(data);
-					sendData = {name:"Donald Duck",city:"Duckburg"};
-					xhr = new plus.net.XMLHttpRequest();
-					xhr.onreadystatechange = function() {
-						if(xhr.readyState == 4) {
-							if(xhr.status == 200) {
-								alert("ok");
-								alert(xhr.responseText);
-							} else {
-								alert(xhr.responseText);
-								alert(xhr.response);
-								console.log("responseText: " + xhr.responseText);
+				Scanresult = result.split(":");
+				sendData = {};
+				sendData.empcode = JSON.parse(localStorage.getItem("user"))[0].EmployeeNo;
+				sendData.orderno = Scanresult[8];
+				sendData.seqno = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
+				sendData.bedno = Scanresult[6];
+				sendData.groupno = Scanresult[5];
+				sendData.color = Scanresult[2];
+				sendData.sizes = Scanresult[9];
+				sendData.quantity = Scanresult[3];
+				xhr = new plus.net.XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState == 4) {
+						if(xhr.status == 200) {
+							// 返回结果
+							rep = JSON.parse(xhr.responseText)[0].errorcode;
+							if(rep == 1) {
+								// 批量扫码处理方式, 单号成功添加到服务器
+								if(isScanBatch == "true") {
+									scan.cancel();
+									batchList.push(result);
+									plus.nativeUI.alert("扫码成功！", function() {
+										scan.start();
+									}, "信息框", "确定");
+								} else {
+									// 单个扫码处理方式, 单号成功添加到服务器
+									plus.storage.setItem("scanCodeResult", result);
+									goCodeResult();
+								}
+							} else if(rep == 0) {
+								// 单号已经添加过服务器
+								scan.cancel();
+								plus.nativeUI.alert("该单号已经扫描过", function() {
+									scan.start();
+								}, "信息框", "确定");
 							}
+						} else {
+							alert(xhr.responseText);
+							console.log("responseText: " + xhr.responseText);
 						}
 					}
-					xhr.open("POST", "http://www.w3school.com.cn/example/jquery/demo_test_post.asp");
-					xhr.setRequestHeader('Content-Type','application/json');
-					xhr.send(JSON.stringify(sendData));
-//					plus.storage.setItem("scanCodeResult", result);
-//					goCodeResult();
 				}
+				xhr.open("POST", geturl);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.send(JSON.stringify(sendData));
 			}
 			// 批量确定
 			function batchSubmit() {

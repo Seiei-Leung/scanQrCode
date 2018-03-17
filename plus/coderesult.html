@@ -10,23 +10,26 @@
 		<script src="../js/common.js"></script>
 		<script>
 			var 
-				ws, wo,
 				domready = false,
 				resultList,
 				result,
 				domItem;
 			// 初始化
 			function plusReady() {
-				if(ws || !window.plus || !domready) {
+				if(!window.plus || !domready) {
 					return;
 				}
+				
 				// 安卓机返回键
 				plus.key.addEventListener('backbutton', function() {
 					goback();
 				}, false);
+				
 				// 初始化用户
 				user = JSON.parse(localStorage.getItem("user"))[0];
-				document.getElementById("username").innerText = user.Name;
+				document.getElementById("username").innerText = user.EmployeeName_User;
+				document.getElementById("userid").innerText = user.EmployeeNo;
+				
 				// 初始化扫码数据
 				if(plus.storage.getItem("isScanBatch") == 'false' || !plus.storage.getItem("isScanBatch")) {
 					result = plus.storage.getItem("scanCodeResult");
@@ -52,7 +55,6 @@
 					console.log(result);
 				}
 			}
-
 			// plus初始化后，执行 plusReady
 			if(window.plus) {
 				plusReady();
@@ -87,13 +89,13 @@
 				</div>
 				<div class="id">
 					<div class="title">工号：</div>
-					<div class="txt">00004</div>
+					<div class="txt" id="userid"></div>
 				</div>
 			</div>
 			<div class="resultList" id="resultList">
 			</div>
 			<div class="submit">
-				<button>确 认</button>
+				<button onclick="goback()">确 认</button>
 			</div>
 		</div>
 	</body>
