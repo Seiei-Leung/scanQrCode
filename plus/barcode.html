@@ -103,7 +103,7 @@
 							} else if(rep == 0) {
 								// 单号已经添加过服务器
 								scan.cancel();
-								plus.nativeUI.alert("该单号已经扫描过", function() {
+								plus.nativeUI.alert(JSON.parse(xhr.responseText)[0].errormsg, function() {
 									scan.start();
 								}, "信息框", "确定");
 							}

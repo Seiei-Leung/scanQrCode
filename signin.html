@@ -19,6 +19,12 @@
 			if(localStorage.getItem("user")) {
 				location.assign("plus/index.html");
 			}
+			// 检测网络
+			function checkNet() {
+				if (plus.networkinfo.getCurrentType() == 0 || plus.networkinfo.getCurrentType() == 1) {
+					plus.nativeUI.alert("为了应用功能正常使用，请检查手机网络状态是否正常", function(){}, "信息框", "确定");
+				}
+			}
 			var domready = false;
 			// plusready 比 domcontentready 晚
 			function plusReady() {
@@ -26,6 +32,8 @@
 					return;
 				}
 				plus.navigator.setStatusBarBackground('#444444');
+				checkNet();
+				setInterval("checkNet()", 30000); // 每30秒检测一次网络
 			};
 			if(window.plus) {
 				plusReady();

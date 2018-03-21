@@ -14,7 +14,12 @@
 			document.oncontextmenu = function() {
 				return false;
 			};
-
+			// 检测网络
+			function checkNet() {
+				if (plus.networkinfo.getCurrentType() == 0 || plus.networkinfo.getCurrentType() == 1) {
+					plus.nativeUI.alert(plus.networkinfo.getCurrentType() + "为了应用功能正常使用，请检查手机网络状态是否正常", function(){}, "信息框", "确定");
+				}
+			}
 			// 初始化Plus
 			var
 				user,
@@ -27,6 +32,7 @@
 				if(!window.plus || !domready) {
 					return;
 				}
+				setInterval("checkNet()", 30000); // 每30秒检测一次网络
 				// 设置手机顶部栏颜色,这只适合 ios，要设置安卓，就要在manifest.json中设置 statusbar
 				plus.navigator.setStatusBarBackground('#444');
 				// 初始化用户
@@ -212,12 +218,12 @@
 		<!-- 工作台页面 -->
 		<div class="contain-wrapper workbench" style="display: none;">
 			<div class="item-wrapper">
-				<div class="item">
+				<div class="item" onclick="clicked(this.id)" id="productSchedule.html">
 					<div class="icon">
 						<img src="../img/icon_4.png" />
 					</div>
 					<div class="txt">
-						呼叫组长
+						排产检查
 					</div>
 				</div>
 				<div class="item">
