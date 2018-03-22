@@ -10,16 +10,8 @@
 		<title>排产查询</title>
 		<link rel="stylesheet" href="../css/common.css" />
 		<link rel="stylesheet" href="../css/style.css" />
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
-		<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
 		<script type="text/javascript" src="../js/common.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<script type="text/javascript">
 			var domready = false;
 			// plusready 比 domcontentready 晚
@@ -27,140 +19,9 @@
 				if(!window.plus || !domready) {
 					return;
 				}
+				// 横屏
 				plus.screen.lockOrientation('landscape-secondary');
 
-				var dom = document.getElementById("container");
-				var myChart = echarts.init(dom);
-				var app = {};
-				option = null;
-
-				var data = [];
-				var dataCount = 10;
-				var startTime = +new Date();
-				var categories = ['categoryA', 'categoryB', 'categoryC'];
-				var types = [{
-						name: 'JS Heap',
-						color: '#7b9ce1'
-					},
-					{
-						name: 'Documents',
-						color: '#bd6d6c'
-					},
-					{
-						name: 'Nodes',
-						color: '#75d874'
-					},
-					{
-						name: 'Listeners',
-						color: '#e0bc78'
-					},
-					{
-						name: 'GPU Memory',
-						color: '#dc77dc'
-					},
-					{
-						name: 'GPU',
-						color: '#72b362'
-					}
-				];
-
-				// Generate mock data
-				echarts.util.each(categories, function(category, index) {
-					var baseTime = startTime;
-					for(var i = 0; i < dataCount; i++) {
-						var typeItem = types[Math.round(Math.random() * (types.length - 1))];
-						var duration = Math.round(Math.random() * 10000);
-						data.push({
-							name: typeItem.name,
-							value: [
-								index,
-								baseTime,
-								baseTime += duration,
-								duration
-							],
-							itemStyle: {
-								normal: {
-									color: typeItem.color
-								}
-							}
-						});
-						baseTime += Math.round(Math.random() * 2000);
-					}
-				});
-
-				function renderItem(params, api) {
-					var categoryIndex = api.value(0);
-					var start = api.coord([api.value(1), categoryIndex]);
-					var end = api.coord([api.value(2), categoryIndex]);
-					var height = api.size([0, 1])[1] * 0.6;
-
-					return {
-						type: 'rect',
-						shape: echarts.graphic.clipRectByRect({
-							x: start[0],
-							y: start[1] - height / 2,
-							width: end[0] - start[0],
-							height: height
-						}, {
-							x: params.coordSys.x,
-							y: params.coordSys.y,
-							width: params.coordSys.width,
-							height: params.coordSys.height
-						}),
-						style: api.style()
-					};
-				}
-
-				option = {
-					tooltip: {
-						formatter: function(params) {
-							return params.marker + params.name + ': ' + params.value[3] + ' ms';
-						}
-					},
-					title: {
-						text: 'Profile',
-						left: 'center'
-					},
-					legend: {
-						data: ['bar', 'error']
-					},
-					dataZoom: [{
-						type: 'inside',
-						filterMode: 'weakFilter'
-					}],
-					grid: {
-						height: 100
-					},
-					xAxis: {
-						min: startTime,
-						scale: true,
-						axisLabel: {
-							formatter: function(val) {
-								return Math.max(0, val - startTime) + ' ms';
-							}
-						}
-					},
-					yAxis: {
-						data: categories
-					},
-					series: [{
-						type: 'custom',
-						renderItem: renderItem,
-						itemStyle: {
-							normal: {
-								opacity: 0.8
-							}
-						},
-						encode: {
-							x: [1, 2],
-							y: 0
-						},
-						data: data
-					}]
-				};;
-				if(option && typeof option === "object") {
-					myChart.setOption(option, true);
-				}
 			}
 			if(window.plus) {
 				plusReady();
@@ -189,8 +50,48 @@
 			<div class="title">排产查询</div>
 		</header>
 		<div class="contain-wrapper">
-			<div id="container" style="height: 1000px"></div>
+			<div id="app">
+				<!-- 生产线 -->
+				<div></div>
+				<!-- 排产详情 -->
+				<div>
+					<div class="year">{{year}}</div>
+					<div class="months">
+						<div v-for="month in months">
+							<div class="month">
+								{{month}}
+							</div>
+							<div v-for="day in getDays(month)">
+								{{day}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
+	<script type="text/javascript">
+		var now = new Date();
+		var app = new Vue({
+			el: '#app',
+			data: {
+				year: now.getFullYear(),
+				months: [1,2,3,4,5,6,7,8,9,10,11,12]
+			},
+			methods: {
+				getDays: function(month) {
+					var 
+						year = this.year,
+						d = new Date(year, month, 0),
+						days = [];
+    				d = d.getDate();
+    				for (var i=0; i<d; i++) {
+    					days.push(i+1);
+    				}
+    				return days;
+				}
+			}
+		})
+	</script>
 
 </html>

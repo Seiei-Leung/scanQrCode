@@ -13,3 +13,8 @@ function clicked(id) {
 function goback() {
 	plus.webview.currentWebview().close("slide-out-left", null);
 }
+
+//
+function clickLink(link) {
+	location.assign(link);
+}
