@@ -1,0 +1,125 @@
+#app {
+	font-size: 0;
+	white-space: nowrap;
+}
+
+.productLines {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.productLines .title {
+	box-sizing: border-box;
+	height: 49px;
+	line-height: 49px;
+	text-align: center;
+	font-size: 12px;
+	border: 1px solid #ddd;
+	border-right: none;
+}
+
+.productLines .productLine {
+	box-sizing: border-box;
+	padding: 0 1em;
+	height: 36px;
+	line-height: 36px;
+	font-size: 12px;
+	text-align: center;
+	border: 1px solid #ddd;
+	border-top: none;
+	border-right: none
+}
+
+
+/* 366*24=8784 365*24=8760*/
+
+.detail-wrapper {
+	display: inline-block;
+	width: 8760px;
+	border-bottom: 1px solid #ddd;
+}
+
+.detail-wrapper .leadYear {
+	width: 8784px;
+}
+
+.months {
+	box-sizing: border-box;
+	display: inline-block;
+	white-space: nowrap;
+	border-right: 1px solid #ddd
+}
+
+.months .month {
+	display: inline-block;
+}
+
+.monthTxt {
+	box-sizing: border-box;
+	height: 24px;
+	line-height: 24px;
+	text-align: center;
+	font-size: 12px;
+	border: 1px solid #ddd;
+	border-bottom: none;
+	border-right: none;
+}
+
+.singleItem {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	text-align: center;
+	font-size: 12px;
+	border: 1px solid #ddd;
+	border-right: none;
+	border-bottom: none
+}
+
+.singleItem2 {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 24px;
+	height: 36px;
+	line-height: 36px;
+	text-align: center;
+	font-size: 12px;
+	border: 1px solid #ddd;
+	border-right: none;
+	border-bottom: none
+}
+
+.detail-wrapper .productLine {
+	position: relative;
+}
+
+.planBar {
+	box-sizing: border-box;
+	position: absolute;
+	top: 4px;
+	height: 30px;
+	background-color: #ccc;
+	border: 1px solid #444;
+}
+
+.planBar .txt {
+	width: 100%;
+	background-color: #fff;
+	height: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 14px;
+	text-align: center;
+	font-size: 12px;
+}
+
+.planBar .doneBar {
+	height: 14px;
+	text-align: center;
+	font-size: 12px;
+	color: #fff;
+	background-color: #7b9ce1;
+}

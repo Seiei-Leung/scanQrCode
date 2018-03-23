@@ -10,6 +10,7 @@
 		<title>排产查询</title>
 		<link rel="stylesheet" href="../css/common.css" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../css/productschedule.css" />
 		<script type="text/javascript" src="../js/common.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<script type="text/javascript">
@@ -52,17 +53,35 @@
 		<div class="contain-wrapper">
 			<div id="app">
 				<!-- 生产线 -->
-				<div></div>
+				<div class="productLines">
+					<div class="title">
+						生产线
+					</div>
+					<div class="productLine" v-for="value, key in productLines">
+						{{key}}
+					</div>
+				</div>
 				<!-- 排产详情 -->
-				<div>
-					<div class="year">{{year}}</div>
+				<div class="detail-wrapper" v-class="{leapYear: isLeapYear}">
+					<!-- 日期标题 -->
 					<div class="months">
-						<div v-for="month in months">
-							<div class="month">
-								{{month}}
+						<div v-for="month in months" class="month">
+							<div class="monthTxt">
+								{{year}} - {{month}}
 							</div>
-							<div v-for="day in getDays(month)">
+							<div class="day singleItem" v-for="day in getDays(month)">
 								{{day}}
+							</div>
+						</div>
+					</div>
+					<!-- 数据表背景方块 -->
+					<div v-for="productLineValue, productLineKey in productLines" class="productLine">
+						<div class="singleItem2" v-for="item in dayCount">
+						</div>
+						<div class="planBar" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
+							<div class="txt">{{item.customer}}-{{item.orderno}}</div>
+							<div class="doneBar" v-bind:style="{width: donePercent(item.planqty, item.doneqty)}">
+								{{donePercent(item.planqty, item.doneqty)}}
 							</div>
 						</div>
 					</div>
@@ -71,24 +90,109 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-		var now = new Date();
+		var
+			now = new Date(),
+			y = now.getFullYear(),
+			dayCount = ((0 === y % 4) && (0 === y % 100) || (0 === y % 400)) ? 366 : 365; //一年的总天数
 		var app = new Vue({
 			el: '#app',
 			data: {
-				year: now.getFullYear(),
-				months: [1,2,3,4,5,6,7,8,9,10,11,12]
+				year: y,
+				dayCount: dayCount,
+				months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+				productLines: {
+					'2A': [
+						{
+							orderno: 123456789,
+							planqty: 1000,
+							doneqty: 900,
+							customer: '斐乐',
+							sdate: '2018-1-5',
+							edate: '2018-2-19',
+						},
+						{
+							orderno: 123456789,
+							planqty: 1000,
+							doneqty: 100,
+							customer: '安踏',
+							sdate: '2018-2-19',
+							edate: '2018-2-25',
+						}
+					],
+					'4B': [
+						{
+							orderno: 123456789,
+							planqty: 1000,
+							doneqty: 0,
+							customer: '斐乐',
+							sdate: '2018-1-5',
+							edate: '2018-1-19',
+						},
+						{
+							orderno: 123456789,
+							planqty: 1000,
+							doneqty: 400,
+							customer: '安踏',
+							sdate: '2018-3-19',
+							edate: '2018-9-25',
+						}
+					]
+				}
+
 			},
 			methods: {
+				// 用于表示某个月的天数
 				getDays: function(month) {
-					var 
+					var
 						year = this.year,
 						d = new Date(year, month, 0),
-						days = [];
-    				d = d.getDate();
-    				for (var i=0; i<d; i++) {
-    					days.push(i+1);
-    				}
-    				return days;
+						days;
+					days = d.getDate();
+					return days;
+				},
+				donePercent: function(planqty, doneqty) {
+					return(doneqty / planqty * 100 + '%');
+				},
+				// 用于进度条的样式
+				planBarStyle: function(sdate, edate) {
+					var
+						sdateList = sdate.split('-'),
+						edateList = edate.split('-'),
+						dateList = this.dayCount == 365 ? [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] : [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+						leftStyle = 0;
+					// 用于格式化日期字符串
+					if(sdateList[1].length == 1) {
+						sdateList[1] = '0' + sdateList[1];
+					}
+					if(sdateList[2].length == 1) {
+						sdateList[2] = '0' + sdateList[2];
+					}
+					if(edateList[1].length == 1) {
+						edateList[1] = '0' + edateList[1];
+					}
+					if(edateList[2].length == 1) {
+						edateList[2] = '0' + edateList[2];
+					}
+					edate = edateList.join('-');
+					sdate = sdateList.join('-');
+					// 计算宽度
+					var widthStyle = (Date.parse(edate) - Date.parse(sdate)) / 60 / 60 / 24 / 1000 * 24 + 24 + 'px';
+					// 计算左距离
+					for(var i = 0; i < (sdateList[1] - 1); i++) {
+						leftStyle += dateList[i];
+					}
+					leftStyle = (leftStyle + Number(sdateList[2]) - 1) * 24 + 12 + 'px';
+					return {
+						left: leftStyle,
+						width: widthStyle
+					}
+				}
+			},
+			computed: {
+				isLeapYear: function() {
+					if(dayCount == 366) {
+						return true;
+					}
 				}
 			}
 		})
