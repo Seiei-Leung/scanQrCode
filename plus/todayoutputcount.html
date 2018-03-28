@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>移动工票</title>
+		<link rel="stylesheet" href="../css/common.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script>
+			var 
+				reponse,
+				domItem,
+				count = 0,
+				pricecount = 0,
+				domready = false;
+			// 初始化
+			function plusReady() {
+				if(!window.plus || !domready) {
+					return;
+				}
+
+				// 安卓机返回键
+				plus.key.addEventListener('backbutton', function() {
+					goback();
+				}, false);
+
+				// 初始化用户
+				user = JSON.parse(localStorage.getItem("user"))[0];
+				document.getElementById("username").innerText = user.EmployeeName_User;
+				document.getElementById("userid").innerText = user.EmployeeNo;
+				document.getElementById("workGroup").innerText = user.WorkGroup;
+				document.getElementById("workShop").innerText = user.WorkShop;
+
+				// 初始化今日产量数据
+				var xhr = new plus.net.XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState == 4) {
+						if(xhr.status == 200) {
+							reponse = JSON.parse(xhr.responseText);
+							reponse.forEach(function(result) {
+								domItem = document.createElement('ul');
+								domItem.innerHTML = '<li>制单号：<span>' + result.Orderno + '</span></li><li>数量：<span>' + result.Quantity + '</span></li><li>金额：<span>' + result.Amount + '</span></li>';
+								document.getElementById('resultList').appendChild(domItem);
+								count += Number(result.Quantity);
+								pricecount += Number(result.Amount);
+							});
+							document.getElementById("count").innerText = count;
+							document.getElementById("pricecount").innerText = pricecount;
+						} else {
+							console.log(xhr.response);
+							console.log(xhr.responseText);
+						}
+					}
+				}
+				var now = new Date();
+				xhr.open("GET", "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/getTicketByDay_Sum?user=" + user.EmployeeNo +"&date=" + now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate());
+				xhr.send();
+			}
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
+				plusReady();
+			}, false);
+		</script>
+	</head>
+
+	<body style="background-color: #e5e5e5;">
+		<header>
+			<div class="goback" onclick="goback()">
+				<i class="icon-chevron-left"></i>
+			</div>
+			<div class="title">今日产量汇总</div>
+		</header>
+		<div class="contain-wrapper codeResult todayoutput">
+			<div class="personalMsg">
+				<div class="name">
+					<div class="title">姓名：</div>
+					<div class="txt" id="username"></div>
+				</div>
+				<div class="id">
+					<div class="title">工号：</div>
+					<div class="txt" id="userid"></div>
+				</div>
+				<div class="workGroup">
+					<div class="title">生产组别：</div>
+					<div class="txt" id="workGroup"></div>
+				</div>
+				<div class="workShop">
+					<div class="title">生产车间：</div>
+					<div class="txt" id="workShop"></div>
+				</div>
+			</div>
+			<div class="resultList" id="resultList">
+			</div>
+			<div class="collect">
+				<div>
+					总件数：<span id="count"></span>
+				</div>
+				<div>
+					总金额：<span id="pricecount"></span>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

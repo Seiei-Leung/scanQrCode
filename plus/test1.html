@@ -1,252 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
     <title></title>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <style type="text/css">
-    /*
-        4500 - 2613 = 1887
-        600
-        90
-        1197
-    */
-        #app {
-            font-size: 0;
-            white-space: nowrap;
-        }
-        .productLines {
-            display: inline-block;
-            vertical-align: top;
-        }
-        .productLines .title {
-            box-sizing: border-box;
-            height: 49px;
-            line-height: 49px;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid #ddd;
-            border-right: none;
-        }
-        .productLines .productLine {
-            box-sizing: border-box;
-            padding: 0 1em;
-            height: 40px;
-            line-height: 40px;
-            font-size: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-right: none
-        }
-        /* 366*24=8784 365*24=8760*/
-        .detail-wrapper {
-            display: inline-block;
-            width: 8760px;
-            border-bottom: 1px solid #ddd;
-        }
-        .detail-wrapper .leadYear {
-            width: 8784px;
-        }
-        .months {
-            box-sizing: border-box;
-            display: inline-block;
-            white-space: nowrap;
-            border-right: 1px solid #ddd
-        }
-        .months .month {
-            display: inline-block;
-        }
-        .monthTxt {
-            box-sizing: border-box;
-            height: 24px;
-            line-height: 24px;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            border-right: none;
-        }
-        .singleItem {
-            box-sizing: border-box;
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid #ddd;
-            border-right: none;
-            border-bottom: none
-        }
-        .singleItem2 {
-            box-sizing: border-box;
-            display: inline-block;
-            width: 24px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            font-size: 12px;
-            border: 1px solid #ddd;
-            border-right: none;
-            border-bottom: none
-        }
-        .detail-wrapper .productLine {
-            position: relative;
-        }
-        .planBar {
-            box-sizing: border-box;
-            position: absolute;
-            top: 4px;
-            height: 30px;
-            background-color: #ccc;
-            border: 1px solid #444;
-        }
-        .planBar .txt {
-            width: 100%;
-            background-color: #fff;
-            height: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            line-height: 14px;
-            text-align: center;
-            font-size: 12px;
-        }
-        .planBar .doneBar {
-            height: 14px;
-            text-align: center;
-            font-size: 12px;
-            color: #fff;
-            background-color: #7b9ce1;
-        }
+    <style>
+        .div{text-align: center;font-size:30px;}
     </style>
 </head>
-    <body>
-        <div class="contain-wrapper">
-            <div id="app">
-                <!-- 生产线 -->
-                <div class="productLines">
-                    <div class="title">
-                        生产线
-                    </div>
-                    <div class="productLine" v-for="value, key in productLines">
-                        {{key}}
-                    </div>
-                </div>
-                <!-- 排产详情 -->
-                <div class="detail-wrapper" v-class="{leapYear: isLeapYear}">
-                    <!-- 日期标题 -->
-                    <div class="months">
-                        <div v-for="month in months" class="month">
-                            <div class="monthTxt">
-                                {{year}} - {{month}}
-                            </div>
-                            <div class="day singleItem" v-for="day in getDays(month)">
-                                {{day}}
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 数据表背景方块 -->
-                    <div v-for="productLineValue, productLineKey in productLines" class="productLine">
-                        <div class="singleItem2" v-for="item in dayCount">             
-                        </div>
-                        <div class="planBar" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
-                            <div class="txt">{{item.customer}}-{{item.orderno}}</div>
-                            <div class="doneBar" style="width: 60%;">
-                                {{donePercent(item.planqty, item.doneqty)}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-    <script type="text/javascript">
-        var 
-            now = new Date(),
-            y = now.getFullYear(),
-            dayCount = ((0===y%4) && (0===y%100) || (0===y%400)) ? 366 : 365;
-        var app = new Vue({
-            el: '#app',
-            data: {
-                year: y,
-                dayCount: dayCount,
-                months: [1,2,3,4,5,6,7,8,9,10,11,12],
-                productLines: {
-                    '2A': [{
-                        orderno: 123456789,
-                        planqty: 1000,
-                        doneqty: 400,
-                        customer: '斐乐',
-                        sdate: '2018-1-5',
-                        edate: '2018-2-19',
-                    },
-                    {
-                        orderno: 123456789,
-                        planqty: 1000,
-                        doneqty: 400,
-                        customer: '安踏',
-                        sdate: '2018-2-19',
-                        edate: '2018-2-25',
-                    }],
-                    '4B': [{
-                        orderno: 123456789,
-                        planqty: 1000,
-                        doneqty: 400,
-                        customer: '斐乐',
-                        sdate: '2018-1-5',
-                        edate: '2018-1-19',
-                    },
-                    {
-                        orderno: 123456789,
-                        planqty: 1000,
-                        doneqty: 400,
-                        customer: '安踏',
-                        sdate: '2018-3-19',
-                        edate: '2018-3-25',
-                    }]
-                }
-            },
-            methods: {
-                getDays: function(month) {
-                    var 
-                        year = this.year,
-                        d = new Date(year, month, 0),
-                        days = [];
-                    d = d.getDate();
-                    for (var i=0; i<d; i++) {
-                        days.push(i+1);
-                    }
-                    return days;
-                },
-                donePercent: function(planqty, doneqty) {
-                    return (doneqty/planqty * 100 + '%');
-                },
-                planBarStyle: function(sdate, edate) {
-                    sdate = sdate.split('-');
-                    edate = edate.split('-');
-                    var 
-                        dateList = this.dayCount == 365 ? [31,28,31,30,31,30,31,31,30,31,30,31] : [31,29,31,30,31,30,31,31,30,31,30,31],
-                        leftStyle = 0,
-                        widthStyle = (Date.parse(edate) - Date.parse(sdate))/60/60/24/1000*24 + 24 + 'px';
-                    console.log(edate.getTime())
-                    for (var i=0; i<(sdate[1]-1); i++) {
-                        leftStyle += dateList[i];
-                    }
-                    leftStyle = (leftStyle + Number(sdate[2]) - 1)*24 + 12 + 'px';
-                    return {
-                        left: leftStyle,
-                        width: widthStyle
-                    }
-                }
-            },
-            computed: {
-                isLeapYear: function() {
-                    if (dayCount == 366) {
-                        return true;
-                    }
-                }
+<body>
+    <div class="div" style="width:100px;height:100px;line-height:100px;background-color:red;position:absolute;top:0;left:0;">1</div>
+    <div class="div" style="width:100px;height:100px;line-height:100px;background-color:red;position:absolute;top:0;left:110px;">2</div>
+    <div class="div" style="width:100px;height:100px;line-height:100px;background-color:red;position:absolute;top:0;left:220px;">3</div>
+    <div class="div" style="width:100px;height:100px;line-height:100px;background-color:red;position:absolute;top:110px;left:0;">4</div>
+    <div class="div" style="width:100px;height:100px;line-height:100px;background-color:red;position:absolute;top:110px;left:110px;">5</div>
+    <div class="div" style="width:100px;height:100px;line-height:100px;background-color:red;position:absolute;top:110px;left:220px;">6</div>
+  <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script>
+    function getcolor(){
+        var color_arr = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
+        function suiji(){
+            return Math.floor(Math.random()*16);
+        }
+        var colorSTR ="#"+color_arr[suiji()]+color_arr[suiji()]+color_arr[suiji()]+color_arr[suiji()]+color_arr[suiji()]+color_arr[suiji()];
+        return colorSTR;
+    }
+    var divd = $(".div");
+    divd.each(function(index){
+        $(this).on('touchstart', function(evt) {
+            var e = event || evt;
+            e.preventDefault();//阻止其他事件
+            //要做的事情
+        }).on('touchmove', function(evt) {
+            var e = event || evt;
+            e.preventDefault();//阻止其他事件
+
+            // 如果这个元素的位置内只有一个手指的话
+            //console.log(e.targetTouches)
+            //console.log(event.targetTouches[0].clientX+"/"+event.targetTouches[0].clientY+"/"+event.targetTouches[0].pageX+"/"+event.targetTouches[0].pageY)
+            if (e.targetTouches.length == 1) {
+                var touch = e.targetTouches[0];  // 把元素放在手指所在的位置
+                $(this).css("left",(touch.pageX- parseInt($(this).width())/2 + 'px'));
+                $(this).css("top",(touch.pageY- parseInt($(this).height())/2 + 'px'));
+                $(this).css("background", getcolor());
             }
+        }).on('touchend', function(evt) {
+            var e = event || evt;
+            e.preventDefault();//阻止其他事件
+            $(this).css("background",getcolor());
         })
-    </script>
+    });
+</script>
+</body>
 </html>

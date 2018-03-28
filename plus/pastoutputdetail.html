@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>移动工票</title>
+		<link rel="stylesheet" href="../css/common.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script>
+			// sday, eday 是日期字符串，而sdayHook, edayHook 是日期的时间戳
+			var
+				sday,
+				sdayHook,
+				eday,
+				edayHook,
+				sdayDom,
+				edayDom,
+				reponse,
+				domItem,
+				count = 0,
+				pricecount = 0,
+				domready = false;
+
+			// 初始化日期
+			var now = new Date();
+			// 当时间为星期天
+			if(now.getDay() == 0) {
+				edayHook = now;
+				eday = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+				sday = new Date(now.getTime() - 1000 * 6 * 60 * 60 * 24);
+				// 结束日期选择的最小日期
+				sdayHook = sday;
+				sday = sday.getFullYear() + "-" + (sday.getMonth() + 1) + "-" + sday.getDate();
+			} else {
+				sday = now.getTime() - 1000 * 60 * 60 * 24 * (now.getDay() - 1);
+				eday = sday + 1000 * 6 * 60 * 60 * 24;
+				sday = new Date(sday);
+				sdayHook = sday;
+				eday = new Date(eday);
+				edayHook = eday;
+				sday = sday.getFullYear() + "-" + (sday.getMonth() + 1) + "-" + sday.getDate();
+				eday = eday.getFullYear() + "-" + (eday.getMonth() + 1) + "-" + eday.getDate();
+			}
+			// 初始化
+			function plusReady() {
+				if(!window.plus || !domready) {
+					return;
+				}
+
+				// 安卓机返回键
+				plus.key.addEventListener('backbutton', function() {
+					goback();
+				}, false);
+
+				// 初始化用户
+				user = JSON.parse(localStorage.getItem("user"))[0];
+				document.getElementById("username").innerText = user.EmployeeName_User;
+				document.getElementById("userid").innerText = user.EmployeeNo;
+				document.getElementById("workGroup").innerText = user.WorkGroup;
+				document.getElementById("workShop").innerText = user.WorkShop;
+
+				// 初始化日期
+				var
+					sdayDom = document.getElementById("selectSday"),
+					edayDom = document.getElementById("selectEday");
+
+				sdayDom.innerHTML = sday;
+				edayDom.innerHTML = eday;
+
+				// 初始化今日产量数据
+				searchData();
+			}
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
+				plusReady();
+			}, false);
+
+			// 查询历史产量数据
+			function searchData() {
+				count = 0;
+				pricecount = 0;
+				var xhr = new plus.net.XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if(xhr.readyState == 4) {
+						if(xhr.status == 200) {
+							reponse = JSON.parse(xhr.responseText);
+							reponse.forEach(function(result) {
+								domItem = document.createElement('ul');
+								domItem.innerHTML = '<li>制单号：<span>' + result.Orderno + '</span></li><li>床次：<span>' + result.BedNo + '</span></li><li>工序号：<span>' + result.SeqNo + '</span></li><li>工序名称：<span>' + result.SeqName + '</span></li><li>扎号：<span>' + result.GroupNo + '</span></li><li>尺码：<span>' + result.ProdSize + '</span></li><li>颜色：<span>' + result.Color + '</span></li><li>数量：<span>' + result.Quantity + '</span></li><li>单价：<span>' + result.Price + '</span></li><li>金额：<span>' + result.Amount + '</span></li><li>回收时间：<span>' + result.BTime.slice(0, 16) + '</span></li>';
+								document.getElementById('resultList').appendChild(domItem);
+								count += Number(result.Quantity);
+								pricecount += Number(result.Amount);
+							});
+							document.getElementById("count").innerText = count;
+							document.getElementById("pricecount").innerText = pricecount;
+						} else {
+							console.log(xhr.response);
+							console.log(xhr.responseText);
+						}
+					}
+				}
+				xhr.open("GET", "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/getTicketDetail?user=" + user.EmployeeNo +"&sdate=" + sday + "&edate=" + eday);
+				xhr.send();
+			}
+			// 点击选择开始日期
+			function pickSdate() {
+				var sdayDom = document.getElementById("selectSday");
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					// 制定结束日期可选择的最小日期
+					sdayHook = d;
+					sday = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+					sdayDom.innerHTML = sday;
+					pickEdate();
+				}, function(e) {}, {
+					title: "请选择开始日期"
+				});
+			}
+			// 点击选择结束日期
+			function pickEdate() {
+				var edayDom = document.getElementById("selectEday");
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					edayHook = d;
+					eday = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+					edayDom.innerHTML = eday;
+					document.getElementById('resultList').innerHTML = '';
+					searchData();
+				}, function(e) {}, {
+					title: "请选择结束日期",
+					minDate: sdayHook
+				});
+			}
+			// 点击上一周
+			function lastWeek() {
+				var
+					sdayDom = document.getElementById("selectSday"),
+					edayDom = document.getElementById("selectEday");
+				sdayHook = sdayHook - 7 * 60 * 60 * 24 * 1000;
+				edayHook = edayHook - 7 * 60 * 60 * 24 * 1000;
+				sday = new Date(sdayHook);
+				eday = new Date(edayHook);
+				sday = sday.getFullYear() + "-" + (sday.getMonth() + 1) + "-" + sday.getDate();
+				eday = eday.getFullYear() + "-" + (eday.getMonth() + 1) + "-" + eday.getDate();
+				sdayDom.innerHTML = sday;
+				edayDom.innerHTML = eday;
+				document.getElementById('resultList').innerHTML = '';
+				searchData();
+			}
+			// 点击下一周
+			function nextWeek() {
+				var
+					sdayDom = document.getElementById("selectSday"),
+					edayDom = document.getElementById("selectEday");
+				sdayHook = Number(sdayHook) + 7 * 60 * 60 * 24 * 1000;
+				edayHook = Number(edayHook) + 7 * 60 * 60 * 24 * 1000;
+				sday = new Date(sdayHook);
+				eday = new Date(edayHook);
+				sday = sday.getFullYear() + "-" + (sday.getMonth() + 1) + "-" + sday.getDate();
+				eday = eday.getFullYear() + "-" + (eday.getMonth() + 1) + "-" + eday.getDate();
+				sdayDom.innerHTML = sday;
+				edayDom.innerHTML = eday;
+				document.getElementById('resultList').innerHTML = '';
+				searchData();
+			}
+		</script>
+	</head>
+
+	<body style="background-color: #e5e5e5;">
+		<header>
+			<div class="goback" onclick="goback()">
+				<i class="icon-chevron-left"></i>
+			</div>
+			<div class="title">历史产量明细</div>
+		</header>
+		<div class="contain-wrapper codeResult todayoutput">
+			<div class="selectdays">
+				<div class="byselect">
+					<div class="title">查询日期：</div>
+					<div id="selectSday" onclick="pickSdate()">
+					</div>
+					<div>至</div>
+					<div id="selectEday" onclick="pickEdate()">
+					</div>
+				</div>
+				<div class="bybtn">
+					<div class="lastWeek" onclick="lastWeek()">
+						上一周
+					</div>
+					<div class="nextWeek" onclick="nextWeek()">
+						下一周
+					</div>
+				</div>
+			</div>
+			<div class="personalMsg">
+				<div class="name">
+					<div class="title">姓名：</div>
+					<div class="txt" id="username"></div>
+				</div>
+				<div class="id">
+					<div class="title">工号：</div>
+					<div class="txt" id="userid"></div>
+				</div>
+				<div class="workGroup">
+					<div class="title">生产组别：</div>
+					<div class="txt" id="workGroup"></div>
+				</div>
+				<div class="workShop">
+					<div class="title">生产车间：</div>
+					<div class="txt" id="workShop"></div>
+				</div>
+			</div>
+
+			<div class="resultList" id="resultList">
+			</div>
+			<div class="collect">
+				<div>
+					总件数：<span id="count"></span>
+				</div>
+				<div>
+					总金额：<span id="pricecount"></span>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

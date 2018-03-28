@@ -108,16 +108,14 @@
                     },
                     "ipad": {
                          /*iPad竖屏启动图片，分辨率：768x1004*/
-                        "portrait-retina": "img/Cg-4WlPNGz2Ifu3IABSCvMd_sN0AAPyzQEUaecAFILU304.png",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
+                        /*iPad高分屏竖屏图片，分辨率：1536x2008*/
                          /*iPad横屏启动图片，分辨率：1024x748*/
-                        "landscape-retina": "img/Cg-4WlPNGz2Ifu3IABSCvMd_sN0AAPyzQEUaecAFILU304.png", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
-                         /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
-                        "portrait-retina7": "img/Cg-4WlPNGz2Ifu3IABSCvMd_sN0AAPyzQEUaecAFILU304.png"/*iPad iOS7高分屏横屏启动图片，分辨率：2048x1536*/
+                        /*iPad iOS7高分屏横屏启动图片，分辨率：2048x1536*/
                     }
                 },
                 "android": {
                     "mdpi": "", /*普通屏启动图片，分辨率：240x282*/
-                    "ldpi": ""/*1080P高分屏启动图片，分辨率：1080x1882*/
+                    "ldpi": "","hdpi":"img/Cg-4WlPNGz2Ifu3IABSCvMd_sN0AAPyzQEUaecAFILU304.png","xhdpi":"img/Cg-4WlPNGz2Ifu3IABSCvMd_sN0AAPyzQEUaecAFILU304.png","xxhdpi":"img/Cg-4WlPNGz2Ifu3IABSCvMd_sN0AAPyzQEUaecAFILU304.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
             }
         },"ads":{"rp":false,"splash":false,"push":false},"adid":""

@@ -390,3 +390,33 @@ header .title {
 	color: #fff;
 	background-color: #20A0FF;
 }
+
+/* 历史产量明细 */
+.selectdays {
+	padding: 1em 0 0.5em 0;
+	background-color: #fff;
+	border-bottom: 1px solid #ddd;
+}
+.selectdays .byselect,
+.selectdays .bybtn {
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
+}
+.selectdays #selectSday,
+.selectdays #selectEday {
+	padding: 0 0.5em;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+.selectdays .bybtn {
+	margin-top: 0.6em;
+}
+.selectdays .bybtn .lastWeek,
+.selectdays .bybtn .nextWeek {
+	padding: 3px 8px;
+	color: #fff;
+	background-color: #20A0FF;
+	border-radius: 5px;
+}

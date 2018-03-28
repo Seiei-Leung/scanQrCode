@@ -48,13 +48,13 @@
 			<div class="goback" onclick="goback()">
 				<i class="icon-chevron-left"></i>
 			</div>
-			<div class="title">排产查询</div>
+			<div class="title">排产器</div>
 		</header>
 		<div class="contain-wrapper">
 			<div id="app">
 				<!-- 生产线 -->
 				<div class="productLines">
-					<div class="title">
+					<div class="title" ref="startpoint">
 						生产线
 					</div>
 					<div class="productLine" v-for="value, key in productLines">
@@ -78,7 +78,7 @@
 					<div v-for="productLineValue, productLineKey in productLines" class="productLine">
 						<div class="singleItem2" v-for="item in dayCount">
 						</div>
-						<div class="planBar" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
+						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event)" v-on:touchend="end(event)" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
 							<div class="txt">{{item.customer}}-{{item.orderno}}</div>
 							<div class="doneBar" v-bind:style="{width: donePercent(item.planqty, item.doneqty)}">
 								{{donePercent(item.planqty, item.doneqty)}}
@@ -91,42 +91,59 @@
 	</body>
 	<script type="text/javascript">
 		var
+			startX, moveX, endX, eventDomWidth, moveHook,
 			now = new Date(),
 			y = now.getFullYear(),
 			dayCount = ((0 === y % 4) && (0 === y % 100) || (0 === y % 400)) ? 366 : 365; //一年的总天数
 		var app = new Vue({
 			el: '#app',
 			data: {
+				startPoint: 0,
 				year: y,
 				dayCount: dayCount,
 				months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 				productLines: {
-					'2A': [
-						{
+					'2A': [{
 							orderno: 123456789,
 							planqty: 1000,
 							doneqty: 900,
 							customer: '斐乐',
 							sdate: '2018-1-5',
-							edate: '2018-2-19',
+							edate: '2018-1-19',
 						},
 						{
-							orderno: 123456789,
+							orderno: 'File1m8386125G,F11M838612,F11M838612HK',
 							planqty: 1000,
-							doneqty: 100,
-							customer: '安踏',
-							sdate: '2018-2-19',
-							edate: '2018-2-25',
-						}
-					],
-					'4B': [
+							doneqty: 250,
+							customer: '斐乐，斐乐，斐乐',
+							sdate: '2018-3-11',
+							edate: '2018-3-25',
+						},
 						{
+							orderno: 'F61M838518F',
+							planqty: 1000,
+							doneqty: 270,
+							customer: '斐乐',
+							sdate: '2018-4-25',
+							edate: '2018-5-8',
+						},
+						{
+							orderno: 'F61M838518F',
+							planqty: 1000,
+							doneqty: 550,
+							customer: '斐乐',
+							sdate: '2018-8-25',
+							edate: '2018-9-10',
+						}
+
+					],
+					'4B': [{
 							orderno: 123456789,
 							planqty: 1000,
-							doneqty: 0,
+							doneqty: 10,
 							customer: '斐乐',
 							sdate: '2018-1-5',
-							edate: '2018-1-19',
+							edate: '2018-1-25',
 						},
 						{
 							orderno: 123456789,
@@ -134,7 +151,15 @@
 							doneqty: 400,
 							customer: '安踏',
 							sdate: '2018-3-19',
-							edate: '2018-9-25',
+							edate: '2018-3-25',
+						},
+						{
+							orderno: 'F61W31614F',
+							planqty: 1000,
+							doneqty: 550,
+							customer: '斐乐',
+							sdate: '2018-10-25',
+							edate: '2018-10-30',
 						}
 					]
 				}
@@ -150,8 +175,13 @@
 					days = d.getDate();
 					return days;
 				},
+				// 求出百分比
 				donePercent: function(planqty, doneqty) {
-					return(doneqty / planqty * 100 + '%');
+					if((doneqty / planqty * 100 + ' ').length > 2) {
+						return((doneqty / planqty * 100 + ' ').slice(0, 2) + '%');
+					} else if((doneqty / planqty * 100 + ' ').length == 2) {
+						return((doneqty / planqty * 100 + ' ').slice(0, 1) + '%');
+					}
 				},
 				// 用于进度条的样式
 				planBarStyle: function(sdate, edate) {
@@ -186,6 +216,27 @@
 						left: leftStyle,
 						width: widthStyle
 					}
+				},
+				// 拖动事件
+				start: function(e) {
+					e.preventDefault();
+					startX = e.targetTouches[0].pageX;
+				},
+				move: function(e) {
+					e.preventDefault();
+					moveX = e.targetTouches[0].pageX;
+					moveY = e.targetTouches[0].pageY;
+					eventDomWidth = e.currentTarget.style.width.split('px')[0];
+					moveHook = moveX - eventDomWidth / 2;
+					if ((moveHook) > 0 && (moveHook < this.dayCount*24 - eventDomWidth)) {
+						e.currentTarget.style.left = (moveX - eventDomWidth / 2) + 'px';
+					}
+
+				},
+				end: function(e) {
+					e.preventDefault();
+					endX = e.currentTarget.style.left.split("px")[0];
+					e.currentTarget.style.left = (endX / 24 + '').split('.')[0] * 24 + 12 + 'px';
 				}
 			},
 			computed: {
@@ -194,6 +245,11 @@
 						return true;
 					}
 				}
+			},
+			created: function() {
+				this.$nextTick(function() {
+					this.startPoint = this.$refs.startpoint.offsetWidth;
+				})
 			}
 		})
 	</script>

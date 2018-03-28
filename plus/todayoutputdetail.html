@@ -55,7 +55,7 @@
 					}
 				}
 				var now = new Date();
-				xhr.open("GET", "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/getTicketByDay?user=" + JSON.parse(localStorage.getItem("user"))[0].EmployeeNo + "&date=" + now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate());
+				xhr.open("GET", "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/getTicketByDay?user=" + user.EmployeeNo +"&date=" + now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate());
 				xhr.send();
 			}
 			// plus初始化后，执行 plusReady
@@ -77,7 +77,7 @@
 			<div class="goback" onclick="goback()">
 				<i class="icon-chevron-left"></i>
 			</div>
-			<div class="title">今日产量</div>
+			<div class="title">今日产量明细</div>
 		</header>
 		<div class="contain-wrapper codeResult todayoutput">
 			<div class="personalMsg">
