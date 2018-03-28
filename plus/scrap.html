@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>扫码</title>
+		<script src="../js/common.js"></script>
+		<link rel="stylesheet" href="../css/common.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<script>
+			// 初始化
+			var
+				ws, wo,
+				domready = false,
+				scan,
+				isScanBatch;
+
+			function plusReady() {
+				if(ws || !window.plus || !domready) {
+					return;
+				}
+				// 安卓机返回键
+				plus.key.addEventListener('backbutton', function() {
+					goback();
+				}, false);
+				// 获取窗口对象
+				ws = plus.webview.currentWebview();
+				wo = ws.opener();
+				// 初始化扫码功能
+				ws.addEventListener('show', function() {
+					scan = new plus.barcode.Barcode('bcid');
+					scan.onmarked = onmarked;
+					scan.start();
+				}, false);
+				ws.addEventListener('hide', function() {
+					scan.start();
+				}, false);
+				ws.show('pop-in');
+			}
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
+				plusReady();
+			}, false);
+
+			// 关闭扫码
+			function cancelScan() {
+				scan.cancel(); // 停止
+				scan.close(); // 关闭
+			}
+			// 扫码成功返回
+			var Scanresult;
+
+			function onmarked(type, result, file) {
+				plus.storage.setItem("scrapResult", result);
+				goCodeResult();
+			}
+			// 打开闪光灯
+			function setFlash() {
+				scan.setFlash();
+			}
+			// 返回前一页
+			function goback() {
+				cancelScan();
+				plus.webview.currentWebview().close("slide-out-left", null);
+			}
+			// 从相册中选择二维码图片 
+			function scanPicture() {
+				plus.gallery.pick(function(path) {
+					plus.barcode.scan(path, onmarked, function(error) {
+						plus.nativeUI.alert('无法识别此图片');
+					});
+				}, function(err) {
+					console.log('Failed: ' + err.message);
+				});
+			}
+			// 扫码成功去表单页面
+			function goCodeResult() {
+				if(plus.webview.getWebviewById("scrapresult.html")) {
+					plus.webview.getWebviewById("scrapresult.html").show("pop-in", null);
+				} else {
+					var _openw = plus.webview.create("scrapresult.html", "scrapresult.html", {
+						scrollIndicator: 'none',
+						scalable: false,
+						popGesture: 'close'
+					});
+					_openw.show("pop-in", null);
+				}
+				plus.webview.currentWebview().hide();
+			}
+		</script>
+	</head>
+
+	<body style="background-color: #000;">
+		<header>
+			<div class="goback" onclick="goback()">
+				<i class="icon-chevron-left"></i>
+			</div>
+			<div class="title">报废扫码</div>
+		</header>
+		<div class="contain-wrapper">
+			<div id="bcid">
+				<div class="txt">载入中...</div>
+			</div>
+		</div>
+		<div class="footer barcode-footer">
+		</div>
+	</body>
+
+</html>

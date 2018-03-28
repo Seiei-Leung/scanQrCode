@@ -88,7 +88,8 @@
 	font-size: 12px;
 	border: 1px solid #ddd;
 	border-right: none;
-	border-bottom: none
+	border-bottom: none;
+	z-index: -1;
 }
 
 .detail-wrapper .productLine {
@@ -102,6 +103,7 @@
 	height: 30px;
 	background-color: #ccc;
 	border: 1px solid #444;
+	z-index: 1000;
 }
 
 .planBar .txt {

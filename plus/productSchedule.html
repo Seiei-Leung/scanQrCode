@@ -75,11 +75,11 @@
 						</div>
 					</div>
 					<!-- 数据表背景方块 -->
-					<div v-for="productLineValue, productLineKey in productLines" class="productLine">
+					<div v-for="productLineValue, productLineKey, $index in productLines" class="productLine">
 						<div class="singleItem2" v-for="item in dayCount">
 						</div>
-						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event)" v-on:touchend="end(event)" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
-							<div class="txt">{{item.customer}}-{{item.orderno}}</div>
+						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event, $index)" v-on:touchend="end(event)" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
+							<div class="txt">{{$index}}-{{item.customer}}-{{item.orderno}}</div>
 							<div class="doneBar" v-bind:style="{width: donePercent(item.planqty, item.doneqty)}">
 								{{donePercent(item.planqty, item.doneqty)}}
 							</div>
@@ -91,10 +91,10 @@
 	</body>
 	<script type="text/javascript">
 		var
-			startX, moveX, endX, eventDomWidth, moveHook,
+			startX, moveX, endX, eventDomWidth, eventDomHeight, moveXHook, moveYHook,
 			now = new Date(),
 			y = now.getFullYear(),
-			dayCount = ((0 === y % 4) && (0 === y % 100) || (0 === y % 400)) ? 366 : 365; //一年的总天数
+			dayCount = ((0 === y % 4) && (0 === y % 100) || (0 === y % 400)) ? 366 : 365; // 一年的总天数
 		var app = new Vue({
 			el: '#app',
 			data: {
@@ -138,6 +138,31 @@
 
 					],
 					'4B': [{
+							orderno: 123456789,
+							planqty: 1000,
+							doneqty: 10,
+							customer: '斐乐',
+							sdate: '2018-1-5',
+							edate: '2018-1-25',
+						},
+						{
+							orderno: 123456789,
+							planqty: 1000,
+							doneqty: 400,
+							customer: '安踏',
+							sdate: '2018-3-19',
+							edate: '2018-3-25',
+						},
+						{
+							orderno: 'F61W31614F',
+							planqty: 1000,
+							doneqty: 550,
+							customer: '斐乐',
+							sdate: '2018-10-25',
+							edate: '2018-10-30',
+						}
+					],
+					'5B': [{
 							orderno: 123456789,
 							planqty: 1000,
 							doneqty: 10,
@@ -222,21 +247,41 @@
 					e.preventDefault();
 					startX = e.targetTouches[0].pageX;
 				},
-				move: function(e) {
+				move: function(e, $index) {
 					e.preventDefault();
 					moveX = e.targetTouches[0].pageX;
 					moveY = e.targetTouches[0].pageY;
 					eventDomWidth = e.currentTarget.style.width.split('px')[0];
-					moveHook = moveX - eventDomWidth / 2;
-					if ((moveHook) > 0 && (moveHook < this.dayCount*24 - eventDomWidth)) {
+					moveXHook = moveX - eventDomWidth / 2;
+					moveYHook = moveY - 99 - $index * 36 - 10; // e.targetTouches[0].pageY 代表的坐标点是以整个屏幕为参考点
+					// 左右移动，以一年范围为限制
+					if((moveXHook) > 0 && (moveXHook < this.dayCount * 24 - eventDomWidth)) {
 						e.currentTarget.style.left = (moveX - eventDomWidth / 2) + 'px';
 					}
-
+					// 上下移动
+					if(((-35) * $index - 4) < moveYHook && moveYHook < ((this.productLinesCount - $index - 1) * 35 + 4)) {
+						e.currentTarget.style.top = moveYHook + 'px';
+					}
 				},
 				end: function(e) {
 					e.preventDefault();
+					// 修正左右移动后的位置
 					endX = e.currentTarget.style.left.split("px")[0];
 					e.currentTarget.style.left = (endX / 24 + '').split('.')[0] * 24 + 12 + 'px';
+					// 修正上下移动后进度条的位置
+					endY = Number(e.currentTarget.style.top.split("px")[0]);
+					if (endY > 20 && endY < 35) {
+						e.currentTarget.style.top = '40px'; // 
+					} else if (endY > 35) {
+						e.currentTarget.style.top = (endY / 35 + '').split('.')[0] * 36 + 4 + 'px';
+					} else if (endY < (-20) && endY > (-35)) {
+						e.currentTarget.style.top = "-32px";
+					} else if (endY < (-35)) {
+						e.currentTarget.style.top = (endY / 35 + '').split('.')[0] * 36 + 4  + 'px';
+						console.log((endY / 35 + '').split('.')[0] * 35);
+					} else {
+						e.currentTarget.style.top = '4px';
+					}
 				}
 			},
 			computed: {
@@ -244,6 +289,9 @@
 					if(dayCount == 366) {
 						return true;
 					}
+				},
+				productLinesCount: function() {
+					return Object.keys(this.productLines).length;
 				}
 			},
 			created: function() {

@@ -5,6 +5,7 @@
 }
 a,img,button,input,textarea{
 	-webkit-tap-highlight-color:rgba(255,255,255,0);
+	-webkit-appearance: none;
 }
 a {
 	text-decoration: none;
@@ -95,6 +96,7 @@ header .title {
 .index .qrcode {
 	display: block;
 	padding: 5px 0;
+	margin-top: 10px;
 	background-color: #f5f5f5;
 }
 .index .qrcode .icon {
@@ -115,6 +117,9 @@ header .title {
 .index .qrcode .txt {
 	margin-top: 8px;
 	text-align: center;
+}
+.index .workTables {
+	margin-top: 30px;
 }
 .index .workTables,
 .index .others {
@@ -283,6 +288,7 @@ header .title {
 	margin-top: 15px;
 	padding:5px 15px;
 	line-height: 2em;
+	vertical-align: top;
 	background-color: #fff;
 	border-radius: 10px;
 }
@@ -295,6 +301,35 @@ header .title {
 	background-color: #4E9FEF;
 	font-size: 25px;
 	border-radius: 4px;
+}
+/* 返工扫码确认 */
+.reworkresult input {
+	vertical-align: top;
+	height: 2em;
+	width: 12em;
+	line-height: 2em;
+	text-align: center;
+	border: 1px solid #999;
+	border-radius: 4px;
+	outline: none;
+}
+.reworkresult textarea {
+	vertical-align: top;
+	height: 5em;
+	width: 70%;
+	border: 1px solid #999;
+	border-radius: 4px;
+	outline: none;
+}
+.reworkresult .submit {
+	display: flex;
+	display: -webkit-flex;
+	justify-content: space-around;
+	-webkit-justify-content: space-around;
+}
+.reworkresult .submit button {
+	display: block;
+	width: 40%;
 }
 /* 今日产量页面 */
 .todayoutput .resultList {

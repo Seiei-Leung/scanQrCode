@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>扫码返回结果</title>
+		<link rel="stylesheet" href="../css/common.css" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<script src="../js/common.js"></script>
+		<script>
+			var
+				domready = false,
+				resultList,
+				result,
+				domItem;
+			// 初始化
+			function plusReady() {
+				if(!window.plus || !domready) {
+					return;
+				}
+
+				// 安卓机返回键
+				plus.key.addEventListener('backbutton', function() {
+					goback();
+				}, false);
+
+				// 初始化用户
+				user = JSON.parse(localStorage.getItem("user"))[0];
+				document.getElementById("username").innerText = user.EmployeeName_User;
+				document.getElementById("userid").innerText = user.EmployeeNo;
+
+				// 初始化扫码数据
+				var d = new Date();
+				var year = d.getFullYear();
+				var month = d.getMonth() + 1;
+				month = (month + '').length == 1 ? ('0' + (month)) : (month);
+				var day = d.getDate();
+				day = (day + '').length == 1 ? ('0' + (day)) : (day);
+				d = year + '-' + month + '-' + day;
+				result = plus.storage.getItem("reworkResult");
+//				plus.storage.setItem("reworkResult", '');
+				var processNum = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
+				if(result) {
+					// plus.storage.setItem("reworkResult", '');
+					// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
+					result = result.split(":");
+					domItem = document.createElement('ul');
+					domItem.innerHTML = '<li>制单号：<span>' + result[8] + '</span></li><li>颜色：<span>' + result[2] + '</span></li><li>缸号：<span>' + result[4] + '</span></li><li>扎号：<span>' + result[5] + '</span></li><li>床次：<span>' + result[6] + '</span></li><li>品牌：<span>' + result[7] + '</span></li><li>尺码：<span>' + result[9] + '</span></li><li>工序：<input type="number" value="0"></li><li>数量：<input type="number" value="0"></li><li>查货日期：<input type="date" value="' + d +'"></li><li>查货人员：<input type="text" value="' + user.EmployeeName_User + '"></li><li>返工人员：<input type="text" value="' + user.EmployeeName_User + '"></li><li>返工原因：<textarea type="text" rows="4"></textarea></li>';
+					document.getElementById('resultList').appendChild(domItem);
+				}
+			}
+			// plus初始化后，执行 plusReady
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener('plusready', plusReady, false);
+			}
+			// DOM树初始化后，执行 plusReady
+			document.addEventListener('DOMContentLoaded', function() {
+				domready = true;
+				plusReady();
+			}, false);
+
+			function goback() {
+				plus.webview.currentWebview().close("slide-out-left", null);
+				plus.webview.getWebviewById("rework.html").show();
+			}
+		</script>
+	</head>
+
+	<body style="background-color: #e5e5e5;">
+		<header>
+			<div class="goback" onclick="goback()">
+				<i class="icon-chevron-left"></i>
+			</div>
+			<div class="title">返工确认</div>
+		</header>
+		<div class="contain-wrapper codeResult reworkresult">
+			<div class="personalMsg">
+				<div class="name">
+					<div class="title">姓名：</div>
+					<div class="txt" id="username"></div>
+				</div>
+				<div class="id">
+					<div class="title">工号：</div>
+					<div class="txt" id="userid"></div>
+				</div>
+			</div>
+			<div class="resultList" id="resultList">
+			</div>
+			<div class="submit">
+				<button onclick="goback()">确 认</button>
+				<button onclick="goback()">取消</button>
+			</div>
+		</div>
+	</body>
+
+</html>
