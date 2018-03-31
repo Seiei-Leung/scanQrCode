@@ -306,7 +306,7 @@ header .title {
 .reworkresult input {
 	vertical-align: top;
 	height: 2em;
-	width: 12em;
+	width: 6em;
 	line-height: 2em;
 	text-align: center;
 	border: 1px solid #999;
@@ -454,4 +454,26 @@ header .title {
 	color: #fff;
 	background-color: #20A0FF;
 	border-radius: 5px;
+}
+/* 信息中心 */
+.msgcenter li {
+	padding-top: 1em;
+}
+.msgcenter .time {
+	text-align: center;
+	color: #999;
+}
+.msgcenter .announcementmsg {
+	box-sizing: border-box;
+	margin: auto;
+	margin-top: 0.5em;
+	padding: 0em 1em 1em 1em;
+	width: 90%;
+	background-color: #fff;
+	border-radius: 4px;
+}
+.msgcenter .announcementmsg .title {
+	line-height: 1.8em;
+	font-size: 20px;
+	text-align: center;
 }

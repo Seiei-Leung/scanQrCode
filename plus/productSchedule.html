@@ -57,8 +57,10 @@
 					<div class="title" ref="startpoint">
 						生产线
 					</div>
-					<div class="productLine" v-for="value, key in productLines">
-						{{key}}
+					<div class="productLinesHook" ref="productLinesHook">
+						<div class="productLine" v-for="value, key in productLines">
+							{{key}}
+						</div>
 					</div>
 				</div>
 				<!-- 排产详情 -->
@@ -75,11 +77,11 @@
 						</div>
 					</div>
 					<!-- 数据表背景方块 -->
-					<div v-for="productLineValue, productLineKey, $index in productLines" class="productLine">
+					<div v-for="productLineValue, productLineKey, $productLinesIndex in productLines" class="productLine">
 						<div class="singleItem2" v-for="item in dayCount">
 						</div>
-						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event, $index)" v-on:touchend="end(event)" v-for="item in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
-							<div class="txt">{{$index}}-{{item.customer}}-{{item.orderno}}</div>
+						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event, $productLinesIndex)" v-on:touchend="end(event, $productLinesIndex, $index)" v-for="item, $index in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
+							<div class="txt">{{$productLinesIndex}}-{{item.customer}}-{{item.orderno}}</div>
 							<div class="doneBar" v-bind:style="{width: donePercent(item.planqty, item.doneqty)}">
 								{{donePercent(item.planqty, item.doneqty)}}
 							</div>
@@ -91,10 +93,56 @@
 	</body>
 	<script type="text/javascript">
 		var
-			startX, moveX, endX, eventDomWidth, eventDomHeight, moveXHook, moveYHook,
+			startX, moveX, endX, eventDomWidth, eventDomHeight, moveXHook, moveYHook, setTimeFunc,
 			now = new Date(),
 			y = now.getFullYear(),
 			dayCount = ((0 === y % 4) && (0 === y % 100) || (0 === y % 400)) ? 366 : 365; // 一年的总天数
+
+		// 字符串时间转化为时间戳
+		function stringToTimestamp(timeString) {
+			timeString = timeString.split('-');
+			if(timeString[1].length == 1) {
+				timeString[1] = '0' + timeString[1];
+			}
+			if(timeString[2].length == 1) {
+				timeString[2] = '0' + timeString[2];
+			}
+			timeString = timeString.join('-');
+			var timestamp = new Date(timeString).getTime();
+			return timestamp;
+		}
+		// 时间戳转化为字符串
+		function timestampToString(timestamp) {
+			timestamp = new Date(timestamp);
+			var timestring = timestamp.getFullYear() + '-' + (timestamp.getMonth() + 1) + '-' + timestamp.getDate();
+			return timestring;
+		}
+
+		// 离左距离转化为时间戳
+		function leftToTimestamp(left) {
+			left = left + 12;
+			var
+				dayNum = left / 24;
+			firstDayTimestamp = new Date(y + '-01-01').getTime();
+			nowTimestamp = firstDayTimestamp + (dayNum - 1) * 1000 * 60 * 60 * 24;
+			return nowTimestamp;
+		}
+
+		// 时间戳转化为天为单位的个数
+		function timestampToDay(timestamp) {
+			return timestamp / 1000 / 60 / 60 / 24;
+		}
+
+		// 天的个数转化为时间戳
+		function dayToTimestamp(day) {
+			return day * 60 * 60 * 24 * 1000;
+		}
+
+		// 时间戳转换为离左距离
+		function dateToLeft(timeString) {
+			return timestampToDay(stringToTimestamp(timeString) - stringToTimestamp(y + '-01-01')) * 24 + 12;
+		}
+
 		var app = new Vue({
 			el: '#app',
 			data: {
@@ -102,9 +150,10 @@
 				year: y,
 				dayCount: dayCount,
 				months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+				productLinesKeyList: [],
 				productLines: {
 					'2A': [{
-							orderno: 123456789,
+							orderno: '2A-1',
 							planqty: 1000,
 							doneqty: 900,
 							customer: '斐乐',
@@ -135,10 +184,9 @@
 							sdate: '2018-8-25',
 							edate: '2018-9-10',
 						}
-
 					],
 					'4B': [{
-							orderno: 123456789,
+							orderno: '4B-1',
 							planqty: 1000,
 							doneqty: 10,
 							customer: '斐乐',
@@ -163,7 +211,7 @@
 						}
 					],
 					'5B': [{
-							orderno: 123456789,
+							orderno: '5B-1',
 							planqty: 1000,
 							doneqty: 10,
 							customer: '斐乐',
@@ -231,7 +279,7 @@
 					edate = edateList.join('-');
 					sdate = sdateList.join('-');
 					// 计算宽度
-					var widthStyle = (Date.parse(edate) - Date.parse(sdate)) / 60 / 60 / 24 / 1000 * 24 + 24 + 'px';
+					var widthStyle = (Date.parse(edate) - Date.parse(sdate)) / 60 / 60 / 24 / 1000 * 24 + 'px';
 					// 计算左距离
 					for(var i = 0; i < (sdateList[1] - 1); i++) {
 						leftStyle += dateList[i];
@@ -247,41 +295,75 @@
 					e.preventDefault();
 					startX = e.targetTouches[0].pageX;
 				},
-				move: function(e, $index) {
+				move: function(e, $productLinesIndex) {
 					e.preventDefault();
 					moveX = e.targetTouches[0].pageX;
 					moveY = e.targetTouches[0].pageY;
 					eventDomWidth = e.currentTarget.style.width.split('px')[0];
 					moveXHook = moveX - eventDomWidth / 2;
-					moveYHook = moveY - 99 - $index * 36 - 10; // e.targetTouches[0].pageY 代表的坐标点是以整个屏幕为参考点
+					moveYHook = moveY - 99 - $productLinesIndex * 36 - 10; // e.targetTouches[0].pageY 代表的坐标点是以整个屏幕为参考点
 					// 左右移动，以一年范围为限制
 					if((moveXHook) > 0 && (moveXHook < this.dayCount * 24 - eventDomWidth)) {
 						e.currentTarget.style.left = (moveX - eventDomWidth / 2) + 'px';
 					}
 					// 上下移动
-					if(((-35) * $index - 4) < moveYHook && moveYHook < ((this.productLinesCount - $index - 1) * 35 + 4)) {
+					if(((-35) * $productLinesIndex - 4) < moveYHook && moveYHook < ((this.productLinesCount - $productLinesIndex - 1) * 35 + 4)) {
 						e.currentTarget.style.top = moveYHook + 'px';
 					}
 				},
-				end: function(e) {
+				end: function(e, $productLinesIndex, $index) {
 					e.preventDefault();
 					// 修正左右移动后的位置
 					endX = e.currentTarget.style.left.split("px")[0];
 					e.currentTarget.style.left = (endX / 24 + '').split('.')[0] * 24 + 12 + 'px';
+
+					var
+						nowTimestamp = leftToTimestamp((endX / 24 + '').split('.')[0] * 24 + 12), // 移动后的时间戳
+						nowProductLineNum, // 移动后的生产线序列名称
+						productLinesKeyList = this.productLinesKeyList, // 生产线名称数组
+						productLinesData = this.productLines; // 生产线原始数据
+
+
 					// 修正上下移动后进度条的位置
 					endY = Number(e.currentTarget.style.top.split("px")[0]);
-					if (endY > 20 && endY < 35) {
-						e.currentTarget.style.top = '40px'; // 
-					} else if (endY > 35) {
+					if(endY > 20 && endY < 35) {
+						e.currentTarget.style.top = '40px';
+						nowProductLineNum = $productLinesIndex + 1;
+					} else if(endY > 35) {
 						e.currentTarget.style.top = (endY / 35 + '').split('.')[0] * 36 + 4 + 'px';
-					} else if (endY < (-20) && endY > (-35)) {
+						nowProductLineNum = $productLinesIndex + Number((endY / 35 + '').split('.')[0]);
+					} else if(endY < (-20) && endY > (-35)) {
 						e.currentTarget.style.top = "-32px";
-					} else if (endY < (-35)) {
-						e.currentTarget.style.top = (endY / 35 + '').split('.')[0] * 36 + 4  + 'px';
-						console.log((endY / 35 + '').split('.')[0] * 35);
+						nowProductLineNum = $productLinesIndex - 1;
+					} else if(endY < (-35)) {
+						e.currentTarget.style.top = (endY / 35 + '').split('.')[0] * 36 + 4 + 'px';
+						nowProductLineNum = $productLinesIndex + Number((endY / 35 + '').split('.')[0]);
 					} else {
 						e.currentTarget.style.top = '4px';
+						nowProductLineNum = $productLinesIndex;
 					}
+					// 增加延迟以防移动频率过大
+					if(setTimeFunc) {
+						clearTimeout(setTimeFunc);
+					}
+					var 
+						saveEventObj = e.currentTarget, // 保留事件对象
+						that = this; // 保留Vue对象
+					setTimeFunc = setTimeout(function() {
+						var 
+							nowProductLineName = productLinesKeyList[nowProductLineNum].replace(/\s*/g, ''), // 移动后当前生产线名称
+							nowProductLinesData = productLinesData[nowProductLineName]; // 移动后当前生产线的所有排产数据
+						for (var i=0; i<nowProductLinesData.length; i++) {
+							// 发生重叠
+							if (stringToTimestamp(nowProductLinesData[i].sdate) < nowTimestamp && nowTimestamp < stringToTimestamp(nowProductLinesData[i].edate)) {
+								saveEventObj.style.left = dateToLeft(nowProductLinesData[i].edate) + 'px';
+							}
+							if (stringToTimestamp(nowProductLinesData[i].sdate) > nowTimestamp) {
+								
+							}
+
+						}
+					}, 1000);
 				}
 			},
 			computed: {
@@ -297,6 +379,10 @@
 			created: function() {
 				this.$nextTick(function() {
 					this.startPoint = this.$refs.startpoint.offsetWidth;
+					var productLinesDom = this.$refs.productLinesHook.getElementsByClassName('productLine');
+					for (var i=0; i<productLinesDom.length; i++) {
+						this.productLinesKeyList[i] = productLinesDom[i].innerHTML;
+					}
 				})
 			}
 		})

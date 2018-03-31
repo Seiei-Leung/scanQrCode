@@ -10,6 +10,13 @@
 		<title>移动工票</title>
 		<script type="text/javascript" src="../js/common.js"></script>
 		<script type="text/javascript">
+			// 126.9
+			// 876 + 964 + 264 + 86 + 953.5 = 3143.5
+			// 4500 - 3143.5 = 1356.5
+			// 600 + 519 = 1119
+			// 1356.5 - 1119 = 237.5
+			
+			
 			// 禁止选择
 			document.oncontextmenu = function() {
 				return false;
@@ -192,7 +199,7 @@
 						排产器
 					</div>
 				</div>
-				<div class="item" onclick="clickLink(this.id)" id="test1.html">
+				<div class="item" onclick="clicked(this.id)" id="msgcenter.html">
 					<div class="icon">
 						<img src="../img/icon_21.png" />
 					</div>
@@ -225,15 +232,15 @@
 						<img src="../img/icon_4.png" />
 					</div>
 					<div class="txt">
-						修改载片数量
+						修改裁片数量
 					</div>
 				</div>
-				<div class="item">
+				<div class="item" onclick="clicked(this.id)" id="changecountrecord.html">
 					<div class="icon">
 						<img src="../img/icon_21.png" />
 					</div>
 					<div class="txt">
-						修改记账消息
+						修改裁片记录
 					</div>
 				</div>
 			</div>
@@ -246,7 +253,7 @@
 						返工登记
 					</div>
 				</div>
-				<div class="item">
+				<div class="item" onclick="clicked(this.id)" id="reworkrecord.html">
 					<div class="icon">
 						<img src="../img/icon_21.png" />
 					</div>
@@ -264,7 +271,7 @@
 						报废登记
 					</div>
 				</div>
-				<div class="item">
+				<div class="item" onclick="clicked(this.id)" id="scraprecord.html">
 					<div class="icon">
 						<img src="../img/icon_21.png" />
 					</div>

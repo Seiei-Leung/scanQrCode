@@ -39,7 +39,7 @@
 					// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
 					result = result.split(":");
 					domItem = document.createElement('ul');
-					domItem.innerHTML = '<li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="count">数量：<input type="number" value="0"></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
+					domItem.innerHTML = '<li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="color">原数量：<span>' + result[3] + '</span></li><li class="count">修改数量：<input id="changeNum" type="number" value="' + result[3] +'"></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
 					document.getElementById('resultList').appendChild(domItem);
 				}
 			}
@@ -58,6 +58,23 @@
 			function goback() {
 				plus.webview.currentWebview().close("slide-out-left", null);
 				plus.webview.getWebviewById("scrap.html").show();
+			}
+			
+			function sendData() {
+				var data = {};
+				data.empcode = JSON.parse(localStorage.getItem("user"))[0].EmployeeNo;
+				data.orderno = result[8];
+				data.bedno = result[6];
+				data.groupno = result[5];
+				data.color = result[2];
+				data.sizes = result[9];
+				data.quantity = result[3];
+				data.editqty = document.getElementById('changeNum').value;
+				var url = 'http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/insertCutGrp';
+				var callback = function(resp) {
+					console.log(resp);
+				}
+				submitPost(url, data, callback);				
 			}
 		</script>
 	</head>
@@ -83,7 +100,7 @@
 			<div class="resultList" id="resultList">
 			</div>
 			<div class="submit">
-				<button onclick="goback()">确 认</button>
+				<button onclick="sendData()">确 认</button>
 				<button onclick="goback()">取消</button>
 			</div>
 		</div>
