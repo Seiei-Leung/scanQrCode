@@ -80,7 +80,7 @@
 					<div v-for="productLineValue, productLineKey, $productLinesIndex in productLines" class="productLine">
 						<div class="singleItem2" v-for="item in dayCount">
 						</div>
-						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event, $productLinesIndex)" v-on:touchend="end(event, $productLinesIndex, $index)" v-for="item, $index in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
+						<div class="planBar" v-on:touchstart="start(event)" v-on:touchmove="move(event, $productLinesIndex)" v-on:touchend="end(event, $productLinesIndex, $index)" v-bind:ref="'planBar' + $productLinesIndex + '-' + $index" v-for="item, $index in productLineValue" v-bind:style="planBarStyle(item.sdate, item.edate)">
 							<div class="txt">{{$productLinesIndex}}-{{item.customer}}-{{item.orderno}}</div>
 							<div class="doneBar" v-bind:style="{width: donePercent(item.planqty, item.doneqty)}">
 								{{donePercent(item.planqty, item.doneqty)}}
@@ -157,7 +157,7 @@
 							planqty: 1000,
 							doneqty: 900,
 							customer: '斐乐',
-							sdate: '2018-1-5',
+							sdate: '2018-1-1',
 							edate: '2018-1-19',
 						},
 						{
@@ -165,24 +165,24 @@
 							planqty: 1000,
 							doneqty: 250,
 							customer: '斐乐，斐乐，斐乐',
-							sdate: '2018-3-11',
-							edate: '2018-3-25',
+							sdate: '2018-1-22',
+							edate: '2018-2-10',
 						},
 						{
 							orderno: 'F61M838518F',
 							planqty: 1000,
 							doneqty: 270,
 							customer: '斐乐',
-							sdate: '2018-4-25',
-							edate: '2018-5-8',
+							sdate: '2018-2-10',
+							edate: '2018-3-1',
 						},
 						{
 							orderno: 'F61M838518F',
 							planqty: 1000,
 							doneqty: 550,
 							customer: '斐乐',
-							sdate: '2018-8-25',
-							edate: '2018-9-10',
+							sdate: '2018-3-1',
+							edate: '2018-3-10',
 						}
 					],
 					'4B': [{
@@ -190,24 +190,16 @@
 							planqty: 1000,
 							doneqty: 10,
 							customer: '斐乐',
-							sdate: '2018-1-5',
-							edate: '2018-1-25',
+							sdate: '2018-1-1',
+							edate: '2018-1-15',
 						},
 						{
 							orderno: 123456789,
 							planqty: 1000,
 							doneqty: 400,
 							customer: '安踏',
-							sdate: '2018-3-19',
-							edate: '2018-3-25',
-						},
-						{
-							orderno: 'F61W31614F',
-							planqty: 1000,
-							doneqty: 550,
-							customer: '斐乐',
-							sdate: '2018-10-25',
-							edate: '2018-10-30',
+							sdate: '2018-2-1',
+							edate: '2018-2-15',
 						}
 					],
 					'5B': [{
@@ -215,24 +207,24 @@
 							planqty: 1000,
 							doneqty: 10,
 							customer: '斐乐',
-							sdate: '2018-1-5',
-							edate: '2018-1-25',
+							sdate: '2018-1-1',
+							edate: '2018-1-4',
 						},
 						{
 							orderno: 123456789,
 							planqty: 1000,
 							doneqty: 400,
 							customer: '安踏',
-							sdate: '2018-3-19',
-							edate: '2018-3-25',
+							sdate: '2018-1-4',
+							edate: '2018-1-15',
 						},
 						{
 							orderno: 'F61W31614F',
 							planqty: 1000,
 							doneqty: 550,
 							customer: '斐乐',
-							sdate: '2018-10-25',
-							edate: '2018-10-30',
+							sdate: '2018-1-15',
+							edate: '2018-2-1',
 						}
 					]
 				}
@@ -348,7 +340,8 @@
 					}
 					var 
 						saveEventObj = e.currentTarget, // 保留事件对象
-						that = this; // 保留Vue对象
+						that = this, // 保留Vue对象
+						isEnoughToInsert = false;
 					setTimeFunc = setTimeout(function() {
 						var 
 							nowProductLineName = productLinesKeyList[nowProductLineNum].replace(/\s*/g, ''), // 移动后当前生产线名称
@@ -358,10 +351,21 @@
 							if (stringToTimestamp(nowProductLinesData[i].sdate) < nowTimestamp && nowTimestamp < stringToTimestamp(nowProductLinesData[i].edate)) {
 								saveEventObj.style.left = dateToLeft(nowProductLinesData[i].edate) + 'px';
 							}
-							if (stringToTimestamp(nowProductLinesData[i].sdate) > nowTimestamp) {
-								
+							// 紧贴的情况下整体后移
+							if (stringToTimestamp(nowProductLinesData[i].sdate) > nowTimestamp || stringToTimestamp(nowProductLinesData[i].sdate) == nowTimestamp) {
+								// 在同一条生产线中移动
+								if ($productLinesIndex == nowProductLineNum && i == $index) {
+									return;
+								}
+								// 足够位置插入
+								if (stringToTimestamp(nowProductLinesData[i-1].edate) < nowTimestamp || stringToTimestamp(nowProductLinesData[i-1].edate) == nowTimestamp && (!isEnoughToInsert)) {
+									isEnoughToInsert = true;
+								}
+								if (!isEnoughToInsert) {
+									// 整体后移
+									that.$refs['planBar' + nowProductLineNum + '-' + i][0].style.left = Number(that.$refs['planBar' + nowProductLineNum + '-' + i][0].style.left.split('px')[0]) + Number(saveEventObj.style.width.split("px")[0]) + 'px';	
+								}
 							}
-
 						}
 					}, 1000);
 				}

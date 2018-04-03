@@ -39,7 +39,7 @@
 				day = (day + '').length == 1 ? ('0' + (day)) : (day);
 				d = year + '-' + month + '-' + day;
 				result = plus.storage.getItem("reworkResult");
-//				plus.storage.setItem("reworkResult", '');
+				plus.storage.setItem("reworkResult", '');
 				var processNum = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
 				if(result) {
 					// plus.storage.setItem("reworkResult", '');
@@ -47,7 +47,7 @@
 					result = result.split(":");
 					var seqno = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
 					domItem = document.createElement('ul');
-					domItem.innerHTML = '<li>制单号：<span>' + result[8] + '</span></li><li>颜色：<span>' + result[2] + '</span></li><li>缸号：<span>' + result[4] + '</span></li><li>扎号：<span>' + result[5] + '</span></li><li>床次：<span>' + result[6] + '</span></li><li>品牌：<span>' + result[7] + '</span></li><li>尺码：<span>' + result[9] + '</span></li><li>查货日期：<span>' + d + '</span></li><li>查货人员：<span>' + user.EmployeeName_User + '</span></li><li>原数量：<span>' + result[3] + '</span></li><li>修改数量：<input id="changeNum" type="number" value="' + result[3] + '"></li><li>工序：<input id="seqno" type="number" value="' + seqno + '"></li><li>返工原因：<textarea type="text" rows="4"></textarea></li>';
+					domItem.innerHTML = '<li><span class="titleTxt">制单号：</span><span>' + result[8] + '</span></li><li><span class="titleTxt">颜色：</span><span>' + result[2] + '</span></li><li><span class="titleTxt">缸号：</span><span>' + result[4] + '</span></li><li><span class="titleTxt">扎号：</span><span>' + result[5] + '</span></li><li><span class="titleTxt">床次：</span><span>' + result[6] + '</span></li><li><span class="titleTxt">品牌：</span><span>' + result[7] + '</span></li><li><span class="titleTxt">尺码：</span><span>' + result[9] + '</span></li><li><span class="titleTxt">查货日期：</span><span>' + d + '</span></li><li><span class="titleTxt">查货人员：</span><span>' + user.EmployeeName_User + '</span></li><li><span class="titleTxt">原工序：</span><span>' + seqno + '</span></li><li><span class="titleTxt">原数量：</span><span>' + result[3] + '</span></li><li><span class="titleTxt">返工数量：</span><input id="changeNum" type="number" value="' + result[3] + '"></li><li><span class="titleTxt">返工工序：</span><input id="seqno" type="number" value="' + seqno + '"></li><li><span class="titleTxt">返工原因：</span><textarea id="reason" type="text" rows="4"></textarea></li>';
 					document.getElementById('resultList').appendChild(domItem);
 				}
 			}
@@ -69,19 +69,31 @@
 			}
 
 			function sendData() {
+				if (document.getElementById("reason").value.replace(/\s*/g, '') == '') {
+					plus.nativeUI.alert('请输入返工原因', function() {}, "信息框", "确定");
+					return;
+				}
 				var data = {};
 				data.empcode = JSON.parse(localStorage.getItem("user"))[0].EmployeeNo;
 				data.orderno = result[8];
-				data.seqno = document.getElementById('seqno').value;
+				data.seqno = plus.storage.getItem("processNum") ? plus.storage.getItem("processNum") : 0;
+				data.reseqno = document.getElementById('seqno').value;
 				data.bedno = result[6];
 				data.groupno = result[5];
 				data.color = result[2];
 				data.sizes = result[9];
 				data.quantity = result[3];
 				data.reworkqty = document.getElementById('changeNum').value;
+				data.reason = document.getElementById("reason").value;
 				var url = 'http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/insertRework';
 				var callback = function(resp) {
 					console.log(resp);
+					resp = JSON.parse(resp);
+					if (resp[0].errorcode == '0') {
+						plus.nativeUI.alert(resp[0].errormsg, function() {}, "信息框", "确定");
+					} else {
+						goback();
+					}
 				}
 				submitPost(url, data, callback);
 			}

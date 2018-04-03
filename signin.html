@@ -52,7 +52,7 @@
 					userName = document.getElementById("username").value.replace(/\s*/g, ''),
 					userpw = document.getElementById("userpw").value.replace(/\s*/g, ''),
 					geturl = "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/login?user=" + userName + "&password=" + userpw;
-				// geturl = "http://192.168.1.213:38080/estapi/api/User/GetLogin?username=ZC-DN-LZC&password=123456";
+					//geturl = "http://192.168.1.213:38080/estapi/api/User/GetLogin?username=ZC-DN-LZC&password=123456";
 				if((!userName) || (!userpw)) {
 					plus.nativeUI.alert("请输入账号及密码", function() {}, "信息框", "确定");
 					return;
@@ -72,7 +72,7 @@
 							}
 						} else {
 							console.log("responseText: " + xhr.responseText);
-							plus.nativeUI.alert("请检查密码与账号是否正确", function() {}, "登陆失败", "确定");
+							plus.nativeUI.alert(xhr.status + "链接服务器失败", function() {}, "登陆失败", "确定");
 						}
 					}
 				}

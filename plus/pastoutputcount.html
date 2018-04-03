@@ -9,7 +9,6 @@
 		<link rel="stylesheet" href="../css/style.css" />
 		<script type="text/javascript" src="../js/common.js"></script>
 		<script>
-			
 			// sday, eday 是日期字符串，而sdayHook, edayHook 是日期的时间戳
 			var
 				sday,
@@ -96,7 +95,7 @@
 							reponse = JSON.parse(xhr.responseText);
 							reponse.forEach(function(result) {
 								domItem = document.createElement('ul');
-								domItem.innerHTML = '<li>数量：<span>' + result.Quantity + '</span></li><li>金额：<span>' + result.Amount + '</span></li><li>时间：<span>' + result.CDate + '</span></li>';
+								domItem.innerHTML = '<li><span class="titleTxt">数量：</span><span>' + result.Quantity + '</span></li><li><span class="titleTxt">金额：</span><span>' + result.Amount + '</span></li><li><span class="titleTxt">时间：</span><span>' + result.CDate + '</span></li>';
 								document.getElementById('resultList').appendChild(domItem);
 								count += Number(result.Quantity);
 								pricecount += Number(result.Amount);
@@ -104,6 +103,7 @@
 							document.getElementById("count").innerText = count;
 							document.getElementById("pricecount").innerText = pricecount;
 						} else {
+							alert('链接服务器错误，上传失败');
 							console.log(xhr.response);
 							console.log(xhr.responseText);
 						}
@@ -231,6 +231,7 @@
 					总金额：<span id="pricecount"></span>
 				</div>
 			</div>
+	
 		</div>
 	</body>
 

@@ -41,7 +41,7 @@
 							reponse = JSON.parse(xhr.responseText);
 							reponse.forEach(function(result) {
 								domItem = document.createElement('ul');
-								domItem.innerHTML = '<li>制单号：<span>' + result.Orderno + '</span></li><li>数量：<span>' + result.Quantity + '</span></li><li>金额：<span>' + result.Amount + '</span></li>';
+								domItem.innerHTML = '<li><span class="titleTxt">制单号：</span><span>' + result.Orderno + '</span></li><li><span class="titleTxt">数量：</span><span>' + result.Quantity + '</span></li><li><span class="titleTxt">金额：</span><span>' + result.Amount + '</span></li>';
 								document.getElementById('resultList').appendChild(domItem);
 								count += Number(result.Quantity);
 								pricecount += Number(result.Amount);

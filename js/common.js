@@ -31,12 +31,10 @@ function submitPost(url, data, callback) {
 				callback(xhr.responseText);
 			} else {
 				alert('链接服务器错误，上传失败');
-				console.log("responseText: " + xhr.response);
 			}
 		}
 	}
 	xhr.open("POST", url);
 	xhr.setRequestHeader('Content-Type', 'application/json');
-	console.log(JSON.stringify(data));
 	xhr.send(JSON.stringify(data));
 }

@@ -88,7 +88,6 @@
 			// 查询历史产量数据
 			function searchData() {
 				count = 0;
-				pricecount = 0;
 				var xhr = new plus.net.XMLHttpRequest();
 				xhr.onreadystatechange = function() {
 					if(xhr.readyState == 4) {
@@ -96,20 +95,18 @@
 							reponse = JSON.parse(xhr.responseText);
 							reponse.forEach(function(result) {
 								domItem = document.createElement('ul');
-								domItem.innerHTML = '<li>数量：<span>' + result.Quantity + '</span></li><li>金额：<span>' + result.Amount + '</span></li><li>时间：<span>' + result.CDate + '</span></li>';
+								domItem.innerHTML = '<li><span class="titleTxt">制单号：</span><span>' + result.Orderno + '</span></li><li><span class="titleTxt">颜色：</span><span>' + result.Color + '</span></li><li><span class="titleTxt">扎号：</span><span>' + result.GroupNo + '</span></li><li><span class="titleTxt">床次：</span><span>' + result.BedNo + '</span></li><li><span class="titleTxt">尺码：</span><span>' + result.ProdSize + '</span></li><li><span class="titleTxt">查货日期：</span><span>' + result.BTime.slice(0, 16) + '</span></li><li><span class="titleTxt">查货人员：</span><span>' + result.Checker + '</span></li><li><span class="titleTxt">原工序：</span><span>' + result.SeqNo + '</span></li><li><span class="titleTxt">原数量：</span><span>' + result.Quantity + '</span></li><li><span class="titleTxt">返工数量：</span><span>' + result.ReWorkQty + '</span></li><li><span class="titleTxt">返工工序：</span><span>' + result.ReSeqNo + '</span></li><li><span class="titleTxt">返工原因：</span><span>' + result.Reason + '</span></li>';
 								document.getElementById('resultList').appendChild(domItem);
 								count += Number(result.Quantity);
-								pricecount += Number(result.Amount);
 							});
 							document.getElementById("count").innerText = count;
-							document.getElementById("pricecount").innerText = pricecount;
 						} else {
 							console.log(xhr.response);
 							console.log(xhr.responseText);
 						}
 					}
 				}
-				xhr.open("GET", "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/getTicketSum?user=" + user.EmployeeNo +"&sdate=" + sday + "&edate=" + eday);
+				xhr.open("GET", "http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/getRework?user=" + user.EmployeeNo +"&sdate=" + sday + "&edate=" + eday);
 				xhr.send();
 			}
 			// 点击选择开始日期
@@ -181,7 +178,7 @@
 			<div class="goback" onclick="goback()">
 				<i class="icon-chevron-left"></i>
 			</div>
-			<div class="title">报废记录</div>
+			<div class="title">返工记录</div>
 		</header>
 		<div class="contain-wrapper codeResult todayoutput">
 			<div class="selectdays">
@@ -204,19 +201,19 @@
 			</div>
 			<div class="personalMsg">
 				<div class="name">
-					<div class="title">姓名：</div>
+					<div class="title" style="min-width: 6em;">登记人姓名：</div>
 					<div class="txt" id="username"></div>
 				</div>
 				<div class="id">
-					<div class="title">工号：</div>
+					<div class="title" style="min-width: 6em;">登记人工号：</div>
 					<div class="txt" id="userid"></div>
 				</div>
 				<div class="workGroup">
-					<div class="title">生产组别：</div>
+					<div class="title" style="min-width: 6em;">生产组别：</div>
 					<div class="txt" id="workGroup"></div>
 				</div>
 				<div class="workShop">
-					<div class="title">生产车间：</div>
+					<div class="title" style="min-width: 6em;">生产车间：</div>
 					<div class="txt" id="workShop"></div>
 				</div>
 			</div>
@@ -225,10 +222,7 @@
 			</div>
 			<div class="collect">
 				<div>
-					总件数：<span id="count"></span>
-				</div>
-				<div>
-					总金额：<span id="pricecount"></span>
+					返工总件数：<span id="count"></span>
 				</div>
 			</div>
 		</div>

@@ -39,7 +39,7 @@
 						// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
 						result = result.split(":");
 						domItem = document.createElement('ul');
-						domItem.innerHTML = '<li class="kind">部位：<span>' + result[0] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="count">数量：<span>' + result[3] + '</span></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
+						domItem.innerHTML = '<li><span class=titleTxt>部位：</span><span>' + result[0] + '</span></li><li><span class=titleTxt>颜色：</span><span>' + result[2] + '</span></li><li><span class=titleTxt>数量：</span><span>' + result[3] + '</span></li><li><span class=titleTxt>缸号：</span><span>' + result[4] + '</span></li><li><span class=titleTxt>扎号：</span><span>' + result[5] + '</span></li><li><span class=titleTxt>床次：</span><span>' + result[6] + '</span></li><li><span class=titleTxt>品牌：</span><span>' + result[7] + '</span></li><li><span class=titleTxt>制单号：</span><span>' + result[8] + '</span></li><li><span class=titleTxt>尺码：</span><span>' + result[9] + '</span></li>';
 						document.getElementById('resultList').appendChild(domItem);
 					}
 				} else {
@@ -49,7 +49,7 @@
 					resultList.forEach(function(result) {
 						result = result.split(":");
 						domItem = document.createElement('ul');
-						domItem.innerHTML = '<li class="kind">种类：<span>' + result[0] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="count">数量：<span>' + result[3] + '</span></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
+						domItem.innerHTML = '<li><span class="titleTxt">种类：</span><span>' + result[0] + '</span></li><li><span class="titleTxt">颜色：</span><span>' + result[2] + '</span></li><li><span class="titleTxt">数量：</span><span>' + result[3] + '</span></li><li><span class="titleTxt">缸号：</span><span>' + result[4] + '</span></li><li><span class="titleTxt">扎号：</span><span>' + result[5] + '</span></li><li><span class="titleTxt">床次：</span><span>' + result[6] + '</span></li><li><span class="titleTxt">品牌：</span><span>' + result[7] + '</span></li><li><span class="titleTxt">制单号：</span><span>' + result[8] + '</span></li><li><span class="titleTxt">尺码：</span><span>' + result[9] + '</span></li>';
 						document.getElementById('resultList').appendChild(domItem);
 					})
 					console.log(result);

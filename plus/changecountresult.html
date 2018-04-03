@@ -39,7 +39,7 @@
 					// 上衣:其他(二维码):浅花灰:5:DGF7057779:33:2:斐乐:KF174TK22B:170
 					result = result.split(":");
 					domItem = document.createElement('ul');
-					domItem.innerHTML = '<li class="makeNum">制单号：<span>' + result[8] + '</span></li><li class="color">颜色：<span>' + result[2] + '</span></li><li class="color">原数量：<span>' + result[3] + '</span></li><li class="count">修改数量：<input id="changeNum" type="number" value="' + result[3] +'"></li><li class="dyelotNum">缸号：<span>' + result[4] + '</span></li><li class="bundleNum">扎号：<span>' + result[5] + '</span></li><li class="bedNum">床次：<span>' + result[6] + '</span></li><li class="brand">品牌：<span>' + result[7] + '</span></li><li class="sizeNum">尺码：<span>' + result[9] + '</span></li>';
+					domItem.innerHTML = '<li><span class="titleTxt">制单号：</span><span>' + result[8] + '</span></li><li><span class="titleTxt">颜色：</span><span>' + result[2] + '</span></li><li><span class="titleTxt">原数量：</span><span>' + result[3] + '</span></li><li><span class="titleTxt">修改数量：</span><span><input id="changeNum" type="number" value="' + result[3] +'"></span></li><li><span class="titleTxt">缸号：</span><span>' + result[4] + '</span></li><li><span class="titleTxt">扎号：</span><span>' + result[5] + '</span></li><li><span class="titleTxt">床次：</span><span>' + result[6] + '</span></li><li><span class="titleTxt">品牌：</span><span>' + result[7] + '</span></li><li><span class="titleTxt">尺码：</span><span>' + result[9] + '</span></li>';
 					document.getElementById('resultList').appendChild(domItem);
 				}
 			}
@@ -57,7 +57,7 @@
 
 			function goback() {
 				plus.webview.currentWebview().close("slide-out-left", null);
-				plus.webview.getWebviewById("scrap.html").show();
+				plus.webview.getWebviewById("changecount.html").show();
 			}
 			
 			function sendData() {
@@ -72,9 +72,15 @@
 				data.editqty = document.getElementById('changeNum').value;
 				var url = 'http://1y94182m45.51mypc.cn:30080/mobileticket/index.php/apis/MobileTicket/insertCutGrp';
 				var callback = function(resp) {
-					console.log(resp);
+					console.log(resp)
+					resp = JSON.parse(resp);
+					if (resp[0].errorcode == '0') {
+						plus.nativeUI.alert(resp[0].errormsg, function() {}, "信息框", "确定");
+					} else {
+						goback();
+					}
 				}
-				submitPost(url, data, callback);				
+				submitPost(url, data, callback);
 			}
 		</script>
 	</head>

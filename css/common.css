@@ -281,16 +281,25 @@ header .title {
 	display: inline-block;
 	line-height: 1.5em;
 }
+.codeResult .personalMsg .title {
+	min-width: 5em;
+}
 .codeResult .resultList ul{
 	box-sizing: border-box;
 	width: 95%;
 	margin: auto;
-	margin-top: 15px;
-	padding:5px 15px;
+	margin-top: 5px;
+	padding: 5px 15px;
 	line-height: 2em;
 	vertical-align: top;
 	background-color: #fff;
 	border-radius: 10px;
+}
+.codeResult .resultList li span{
+	display: inline-block;
+}
+.codeResult .resultList .titleTxt {
+	min-width: 6em;
 }
 .codeResult .submit button {
 	display: block;
@@ -316,7 +325,7 @@ header .title {
 .reworkresult textarea {
 	vertical-align: top;
 	height: 5em;
-	width: 70%;
+	width: 60%;
 	border: 1px solid #999;
 	border-radius: 4px;
 	outline: none;
